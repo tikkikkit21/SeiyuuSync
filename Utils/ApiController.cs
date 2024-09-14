@@ -7,6 +7,9 @@ namespace SeiyuuSync.Utils
 {
     class ApiController
     {
+        /// <summary>
+        /// Client to make HTTP requests
+        /// </summary>
         private static HttpClient client;
 
         public ApiController() {
@@ -15,14 +18,24 @@ namespace SeiyuuSync.Utils
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Constants.ACCESS_TOKEN);
         }
 
-        public async Task<AnimeSearchResponse> FindAnime(string name)
+        /// <summary>
+        /// Searches MAL API for anime
+        /// </summary>
+        /// <param name="name">Name of anime to query</param>
+        /// <param name="limit">Number of results to display (default 10)</param>
+        /// <returns>AnimeSearchResponse mirroring the JSON structure</returns>
+        public async Task<AnimeSearchResponse> FindAnime(string name, int limit = 10)
         {
-            string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit=5";
+            string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit={limit}";
             string result = await client.GetStringAsync(query);
             AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
             return response;
         }
 
+        /// <summary>
+        /// Gets my personal MAL list of animes
+        /// </summary>
+        /// <returns>AnimeSearchResponse mirroring the JSON structure</returns>
         public async Task<AnimeSearchResponse> GetMyAnimes()
         {
             string query = $"{Constants.MAL_ROOT}/users/@me/animelist";
@@ -31,6 +44,11 @@ namespace SeiyuuSync.Utils
             return response;
         }
 
+        /// <summary>
+        /// Adds an anime to my personal MAL list of animes
+        /// </summary>
+        /// <param name="animeId">ID of anime</param>
+        /// <returns>Boolean indicating success</returns>
         public async Task<bool> AddAnime(int animeId)
         {
             string query = $"{Constants.MAL_ROOT}/anime/{animeId}/my_list_status";
@@ -40,6 +58,11 @@ namespace SeiyuuSync.Utils
             return true;
         }
 
+        /// <summary>
+        /// Finds all voice actors for an anime
+        /// </summary>
+        /// <param name="animeName">Name of anime</param>
+        /// <returns>Dictionary of VA names associated with a list of characters</returns>
         public async Task<Dictionary<string, List<string>>> FindVoiceActors(string animeName)
         {
             client.DefaultRequestHeaders.Clear();

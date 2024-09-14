@@ -15,6 +15,12 @@ namespace SeiyuuSync
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Finds all common VAs. This method takes in a dictionary of VAs and compares it with all VAs in the database
+        /// </summary>
+        /// <param name="animeName">Name of anime</param>
+        /// <param name="vaDict">Dictionary of all VAs for this anime</param>
+        /// <returns>Dictionary of common VAs</returns>
         private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, Dictionary<string, List<string>> vaDict)
         {
             Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
@@ -33,6 +39,11 @@ namespace SeiyuuSync
             return commonVas;
         }
 
+        /// <summary>
+        /// Adds all VAs in dictionary to MAL and DB
+        /// </summary>
+        /// <param name="animeName">Name of anime</param>
+        /// <param name="vaDict">Dictionary of VA info</param>
         private async void AddVoiceActors(string animeName, Dictionary<string, List<string>> vaDict)
         {
             DbController dbController = new DbController();
@@ -54,6 +65,11 @@ namespace SeiyuuSync
             }
         }
 
+        /// <summary>
+        /// Finds all voice actors for a specificed anime
+        /// </summary>
+        /// <param name="selectedAnime">Name of anime</param>
+        /// <returns>Dictionary of VA info</returns>
         private async Task<Dictionary<string, List<string>>> FindVoiceActors(string selectedAnime)
         {
             ApiController controller = new ApiController();

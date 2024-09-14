@@ -13,6 +13,11 @@ namespace SeiyuuSync.Utils
             database = dbClient.GetDatabase("SeiyuuSync");
         }
 
+        /// <summary>
+        /// Searches for a VA in the database
+        /// </summary>
+        /// <param name="name">Name of VA</param>
+        /// <returns>VoiceActor if found, null otherwise</returns>
         public async Task<VoiceActor> FindVoiceActor(string name)
         {
             IMongoCollection<VoiceActor> collection = database.GetCollection<VoiceActor>("voice_actors");
@@ -20,6 +25,11 @@ namespace SeiyuuSync.Utils
             return result;
         }
 
+        /// <summary>
+        /// Adds a VA to database
+        /// </summary>
+        /// <param name="va">VoiceActor to add</param>
+        /// <returns>Boolean indicating success</returns>
         public async Task<bool> AddVoiceActor(VoiceActor va) {
             IMongoCollection<VoiceActor> collection = database.GetCollection<VoiceActor>("voice_actors");
             await collection.InsertOneAsync(va);
