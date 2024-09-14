@@ -26,7 +26,7 @@ namespace SeiyuuSync
             dgvAnimeList.ClearSelection();
             foreach (Node node in response.Nodes)
             {
-                dgvAnimeList.Rows.Add(node.Anime.Title);
+                dgvAnimeList.Rows.Add(node.Anime.Id, node.Anime.Title);
             }
         }
     }
