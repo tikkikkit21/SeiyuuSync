@@ -3,6 +3,7 @@ using SeiyuuSync.Utils;
 using System.Text.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Amazon.Runtime.Internal.Transform;
 
 namespace SeiyuuSync
 {
@@ -13,18 +14,72 @@ namespace SeiyuuSync
         {
             InitializeComponent();
         }
+
+        private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, Dictionary<string, List<string>> vaDict)
+        {
+            Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
+            DbController dbController = new DbController();
+            foreach (KeyValuePair<string, List<string>> kvp in vaDict)
+            {
+                string vaName = kvp.Key;
+                VoiceActor va = await dbController.FindVoiceActor(vaName);
+
+                if (va != null && va.Characters.Any(c => c.AnimeName != animeName))
+                {
+                    commonVas.Add(vaName, va.Characters.Where(c => c.AnimeName != animeName).ToList());
+                }
+            }
+
+            return commonVas;
+        }
+
+        private async void AddVoiceActors(string animeName, Dictionary<string, List<string>> vaDict)
+        {
+            DbController dbController = new DbController();
+            foreach (KeyValuePair<string, List<string>> kvp in vaDict)
+            {
+                string vaName = kvp.Key;
+                List<string> characters = kvp.Value;
+
+                if (await dbController.FindVoiceActor(vaName) == null)
+                {
+                    List<Character> list = characters.Select(c => new Character { AnimeName = animeName, CharacterName = c}).ToList();
+                    VoiceActor actor = new VoiceActor
+                    {
+                        Name = vaName,
+                        Characters = list
+                    };
+                    await dbController.AddVoiceActor(actor);
+                }
+            }
+        }
+
+        private async Task<Dictionary<string, List<string>>> FindVoiceActors(string selectedAnime)
+        {
+            ApiController controller = new ApiController();
+
+            // va, [char]
+            Dictionary<string, List<string>> vaDict = await controller.FindVoiceActors(selectedAnime);
+            //AddVoiceActors(selectedAnime, vaDict);
+            return vaDict;
+        }
+
         private async void AddButton_Click(object sender, EventArgs e)
         {
             ApiController controller = new ApiController();
             int animeId = (int)dgvAnimeList.SelectedCells[colAnimeId.Index].Value;
             await controller.AddAnime(animeId);
+
+            // add to database
+            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
+            AddVoiceActors(selectedAnime, await controller.FindVoiceActors(selectedAnime));
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
             string animeName = tbxSearch.Text;
             ApiController controller = new ApiController();
-            AnimeSearchResponse response = await controller.SearchAnime(animeName);
+            AnimeSearchResponse response = await controller.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
             dgvAnimeList.ClearSelection();
@@ -34,13 +89,12 @@ namespace SeiyuuSync
             }
         }
 
-        private void dgvAnimeList_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
         private async void CompareButton_Click(object sender, EventArgs e)
         {
-            if(!split)
+            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
+            FindCommonVas(selectedAnime, await FindVoiceActors(selectedAnime));
+
+            if (!split)
             {
                 tableLayoutPanel1.Controls.Remove(dgvAnimeList);
                 tableLayoutPanel1.Controls.Add(dgvAnimeList, 1, 1); // Move button to cell (2,2)

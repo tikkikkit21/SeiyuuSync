@@ -72,7 +72,6 @@
             dgvAnimeList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAnimeList.Size = new Size(474, 631);
             dgvAnimeList.TabIndex = 4;
-            dgvAnimeList.CellContentClick += dgvAnimeList_CellContentClick;
             // 
             // colAnimeId
             // 
