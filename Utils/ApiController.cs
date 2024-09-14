@@ -8,14 +8,22 @@ namespace SeiyuuSync.Utils
     class ApiController
     {
         /// <summary>
-        /// Client to make HTTP requests
+        /// Client to make HTTP requests for MAL API
         /// </summary>
-        private static HttpClient client;
+        private static HttpClient _mal_client;
+
+        /// <summary>
+        /// Client to make HTTP requests for AniList API
+        /// </summary>
+        private static HttpClient _anilist_client;
 
         public ApiController() {
-            client = new HttpClient();
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Constants.ACCESS_TOKEN);
+            _mal_client = new HttpClient();
+            _mal_client.BaseAddress = new Uri(Constants.MAL_ROOT);
+            _mal_client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Constants.ACCESS_TOKEN);
+
+            _anilist_client = new HttpClient();
+            _anilist_client.BaseAddress = new Uri(Constants.ANILIST_ROOT);
         }
 
         /// <summary>
@@ -27,11 +35,11 @@ namespace SeiyuuSync.Utils
         public async Task<List<Anime>> FindAnime(string name, int limit = 10)
         {
             List<Anime> animes = new List<Anime>();
-            string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit={limit}";
+            string query = $"anime?q={name}&limit={limit}";
 
             try
             {
-                string result = await client.GetStringAsync(query);
+                string result = await _mal_client.GetStringAsync(query);
                 AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
                 
                 if (response != null)
@@ -60,8 +68,8 @@ namespace SeiyuuSync.Utils
 
             try
             {
-                string query = $"{Constants.MAL_ROOT}/users/@me/animelist";
-                var result = await client.GetStringAsync(query);
+                string query = $"users/@me/animelist";
+                var result = await _mal_client.GetStringAsync(query);
                 AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
 
                 if (response != null)
@@ -89,9 +97,9 @@ namespace SeiyuuSync.Utils
         {
             try
             {
-                string query = $"{Constants.MAL_ROOT}/anime/{animeId}/my_list_status";
+                string query = $"anime/{animeId}/my_list_status";
                 StringContent body = new StringContent("{}", Encoding.UTF8, "application/json");
-                var result = await client.PutAsync(query, body);
+                var result = await _mal_client.PutAsync(query, body);
                 result.EnsureSuccessStatusCode();
                 return true;
             }
@@ -111,7 +119,6 @@ namespace SeiyuuSync.Utils
         {
             try
             {
-                client.DefaultRequestHeaders.Clear();
                 string query = @"
                 query ($search: String) {
                   Media(search: $search, type: ANIME) {
@@ -149,7 +156,7 @@ namespace SeiyuuSync.Utils
                 // Serialize the request payload to JSON
                 string jsonPayload = JsonSerializer.Serialize(requestPayload);
                 StringContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync(Constants.ANILIST_ROOT, content);
+                HttpResponseMessage response = await _anilist_client.PostAsync("/", content);
                 response.EnsureSuccessStatusCode();
 
                 // Read the response body as a string

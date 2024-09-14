@@ -5,7 +5,7 @@
         /// <summary>
         /// URL Root for MAL API
         /// </summary>
-        public static readonly string MAL_ROOT = "https://api.myanimelist.net/v2";
+        public static readonly string MAL_ROOT = "https://api.myanimelist.net/v2/";
         /// <summary>
         /// Access token for MAL API
         /// </summary>

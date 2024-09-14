@@ -111,13 +111,13 @@ namespace SeiyuuSync
         {
             string animeName = tbxSearch.Text;
             ApiController controller = new ApiController();
-            AnimeSearchResponse response = await controller.FindAnime(animeName);
+            List<Anime> animes= await controller.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
             dgvAnimeList.ClearSelection();
-            foreach (Node node in response.Nodes)
+            foreach (Anime anime in animes)
             {
-                dgvAnimeList.Rows.Add(node.Anime.Id, node.Anime.Title);
+                dgvAnimeList.Rows.Add(anime.Id, anime.Title);
             }
         }
 
