@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            textBox1 = new TextBox();
+            tbxSearch = new TextBox();
             AddButton = new Button();
             CompareButton = new Button();
             dgvAnimeList = new DataGridView();
@@ -37,32 +37,31 @@
             ((System.ComponentModel.ISupportInitialize)dgvAnimeList).BeginInit();
             SuspendLayout();
             // 
-            // textBox1
+            // tbxSearch
             // 
-            textBox1.ForeColor = SystemColors.ScrollBar;
-            textBox1.Location = new Point(189, 44);
-            textBox1.Margin = new Padding(2, 2, 2, 2);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(188, 23);
-            textBox1.TabIndex = 0;
-            textBox1.Text = "search anime...";
-            textBox1.TextChanged += textBox1_TextChanged;
+            tbxSearch.ForeColor = SystemColors.ScrollBar;
+            tbxSearch.Location = new Point(189, 44);
+            tbxSearch.Margin = new Padding(2);
+            tbxSearch.Name = "tbxSearch";
+            tbxSearch.Size = new Size(188, 23);
+            tbxSearch.TabIndex = 0;
+            tbxSearch.Text = "search anime...";
             // 
             // AddButton
             // 
             AddButton.Location = new Point(140, 423);
-            AddButton.Margin = new Padding(2, 2, 2, 2);
+            AddButton.Margin = new Padding(2);
             AddButton.Name = "AddButton";
             AddButton.Size = new Size(78, 20);
             AddButton.TabIndex = 1;
             AddButton.Text = "Add";
             AddButton.UseVisualStyleBackColor = true;
-            AddButton.Click += button1_Click;
+            AddButton.Click += AddButton_Click;
             // 
             // CompareButton
             // 
             CompareButton.Location = new Point(298, 423);
-            CompareButton.Margin = new Padding(2, 2, 2, 2);
+            CompareButton.Margin = new Padding(2);
             CompareButton.Name = "CompareButton";
             CompareButton.Size = new Size(78, 20);
             CompareButton.TabIndex = 3;
@@ -76,14 +75,13 @@
             dgvAnimeList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAnimeList.Columns.AddRange(new DataGridViewColumn[] { Column1 });
             dgvAnimeList.Location = new Point(148, 107);
-            dgvAnimeList.Margin = new Padding(2, 2, 2, 2);
+            dgvAnimeList.Margin = new Padding(2);
             dgvAnimeList.Name = "dgvAnimeList";
             dgvAnimeList.ReadOnly = true;
             dgvAnimeList.RowHeadersVisible = false;
             dgvAnimeList.RowHeadersWidth = 62;
             dgvAnimeList.Size = new Size(252, 239);
             dgvAnimeList.TabIndex = 4;
-            dgvAnimeList.CellContentClick += dataGridView1_CellContentClick_1;
             // 
             // Column1
             // 
@@ -112,8 +110,8 @@
             Controls.Add(dgvAnimeList);
             Controls.Add(CompareButton);
             Controls.Add(AddButton);
-            Controls.Add(textBox1);
-            Margin = new Padding(2, 2, 2, 2);
+            Controls.Add(tbxSearch);
+            Margin = new Padding(2);
             Name = "SearchForm";
             Text = "SearchForm";
             ((System.ComponentModel.ISupportInitialize)dgvAnimeList).EndInit();
@@ -129,5 +127,6 @@
         private DataGridView dgvAnimeList;
         private DataGridViewTextBoxColumn Column1;
         private Button btnSearch;
+        private TextBox tbxSearch;
     }
 }
