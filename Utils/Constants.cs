@@ -1,4 +1,4 @@
-﻿namespace SeiyuuSync
+﻿namespace SeiyuuSync.Utils
 {
     class Constants
     {
