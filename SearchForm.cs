@@ -3,6 +3,7 @@ using SeiyuuSync.Utils;
 using System.Text.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Amazon.Runtime.Internal.Transform;
 
 namespace SeiyuuSync
 {
@@ -14,7 +15,7 @@ namespace SeiyuuSync
             InitializeComponent();
         }
 
-        private async Task<Dictionary<string, List<Character>>> FindCommonVas(Dictionary<string, List<string>> vaDict)
+        private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, Dictionary<string, List<string>> vaDict)
         {
             Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
             DbController dbController = new DbController();
@@ -23,9 +24,9 @@ namespace SeiyuuSync
                 string vaName = kvp.Key;
                 VoiceActor va = await dbController.FindVoiceActor(vaName);
 
-                if (va != null)
+                if (va != null && va.Characters.Any(c => c.AnimeName != animeName))
                 {
-                    commonVas.Add(vaName, va.Characters);
+                    commonVas.Add(vaName, va.Characters.Where(c => c.AnimeName != animeName).ToList());
                 }
             }
 
@@ -53,14 +54,14 @@ namespace SeiyuuSync
             }
         }
 
-        private async void FindVoiceActors()
+        private async Task<Dictionary<string, List<string>>> FindVoiceActors(string selectedAnime)
         {
-            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
             ApiController controller = new ApiController();
 
-            // va, char
+            // va, [char]
             Dictionary<string, List<string>> vaDict = await controller.FindVoiceActors(selectedAnime);
-            AddVoiceActors(selectedAnime, vaDict);
+            //AddVoiceActors(selectedAnime, vaDict);
+            return vaDict;
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -90,7 +91,8 @@ namespace SeiyuuSync
 
         private async void CompareButton_Click(object sender, EventArgs e)
         {
-            FindVoiceActors();
+            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
+            FindCommonVas(selectedAnime, await FindVoiceActors(selectedAnime));
 
             if (!split)
             {
