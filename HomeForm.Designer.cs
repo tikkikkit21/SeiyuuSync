@@ -39,12 +39,13 @@
             // SearchButton
             // 
             SearchButton.Anchor = AnchorStyles.Top;
-            SearchButton.Location = new Point(531, 568);
+            SearchButton.Font = new Font("Segoe UI", 12F);
+            SearchButton.Location = new Point(513, 568);
             SearchButton.Margin = new Padding(2);
             SearchButton.Name = "SearchButton";
-            SearchButton.Size = new Size(93, 32);
+            SearchButton.Size = new Size(130, 32);
             SearchButton.TabIndex = 0;
-            SearchButton.Text = "Search";
+            SearchButton.Text = "Start Search";
             SearchButton.UseVisualStyleBackColor = true;
             SearchButton.Click += SearchButton_Click;
             // 
