@@ -9,4 +9,6 @@
 x64/
 [Bb]in/
 [Oo]bj/
-*.env
+
+# dev
+appsettings.json
