@@ -21,5 +21,13 @@ namespace SeiyuuSync.Utils
             return response;
         }
 
+        public async Task<AnimeSearchResponse> AddAnime(long animeId)
+        {
+            string query = "https://api.myanimelist.net/v2/users/@me/animelist";
+            var result = await client.GetStringAsync(query);
+            AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+            return response;
+        }
+
     }
 }

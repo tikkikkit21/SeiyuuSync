@@ -16,8 +16,13 @@ namespace SeiyuuSync
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
+            ApiController controller = new ApiController();
+            await controller.AddAnime(1);
+
+
+
 
         }
 
