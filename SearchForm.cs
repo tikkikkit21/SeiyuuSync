@@ -3,6 +3,7 @@ using SeiyuuSync.Utils;
 using System.Text.Json;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Xml;
 using Amazon.Runtime.Internal.Transform;
 
 namespace SeiyuuSync
@@ -145,37 +146,249 @@ namespace SeiyuuSync
                 //api stuff here where you fetch the voice actors associated with this anime (locally i think)
 
 
-                Dictionary<string, string[]> voiceActorData = new Dictionary<string, string[]>();
-                voiceActorData["Timothy Cui"] = new string[] { "Summoner's Rift", "Virginia Tech" };
-                voiceActorData["Mike"] = new string[] { "Peraton", "Virginia Tech" };
+                Dictionary<string, MovieCharacter[]> voiceActors = new Dictionary<string, MovieCharacter[]>();
+                //voiceActorData["Timothy Cui"] = new string[] { "Summoner's Rift", "Virginia Tech" };
+                //voiceActorData["Mike"] = new string[] { "Peraton", "Virginia Tech" };
 
-
-
-
-                TreeView treeView = new TreeView
+                voiceActors.Add("Timothy Cui", new[]
                 {
-                    Dock = DockStyle.Fill
+                new MovieCharacter("Summoner's Rift", "JadeJaguar"),
+                new MovieCharacter("Virginia Tech", "Different"),
+                new MovieCharacter("Chi Alpha", "Grad"),
+            });
+
+                voiceActors.Add("Jane Smith", new[]
+                {
+                new MovieCharacter("Frozen", "Elsa"),
+                new MovieCharacter("Enchanted", "Nancy Tremaine")
+            });
+
+                FlowLayoutPanel voiceActorFlow = new FlowLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    AutoScroll = true, // Enable automatic scrolling
+                    FlowDirection = FlowDirection.TopDown, // Stack panels vertically
+                    WrapContents = false // Prevent wrapping, keep adding vertically
                 };
 
-                // Add nodes to TreeView
-                foreach (var actor in voiceActorData)
+                tableLayoutPanel1.Controls.Add(voiceActorFlow, 11, 1);
+                tableLayoutPanel1.SetColumnSpan(voiceActorFlow, 8);
+
+                foreach (var actor in voiceActors)
                 {
-                    TreeNode actorNode = new TreeNode(actor.Key);
+
+
+
+                    Panel panel = new Panel
+                    {
+                        BorderStyle = BorderStyle.FixedSingle,
+                        Width = voiceActorFlow.Width - 50,
+                        Height = 500,
+                        Margin = new Padding(10)
+                    };
+
+                    // Create and configure TableLayoutPanel
+                    TableLayoutPanel tableLayout = new TableLayoutPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        ColumnCount = 2,
+                        RowCount = 2,
+                        ColumnStyles =
+                    {
+                        new ColumnStyle(SizeType.Percent, 50F),
+                        new ColumnStyle(SizeType.Percent, 50F)
+                    },
+                        RowStyles =
+                    {
+                        new RowStyle(SizeType.Percent, 50F),
+                        new RowStyle(SizeType.Percent, 50F)
+                    }
+                    };
+
+                    // Create and add PictureBox to top-left cell
+                    PictureBox pictureBox = new PictureBox
+                    {
+                        //Image = Image.FromFile("path_to_picture.jpg"), // Replace with actual image path
+                        SizeMode = PictureBoxSizeMode.StretchImage,
+                        Dock = DockStyle.Fill
+                    };
+                    tableLayout.Controls.Add(pictureBox, 0, 0);
+
+                    // Create and add Label to top-right cell
+                    Label nameLabel = new Label
+                    {
+                        Text = actor.Key,
+                        Dock = DockStyle.Fill,
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+                    tableLayout.Controls.Add(nameLabel, 1, 0);
+
+                    // Create and add inner FlowLayoutPanel to bottom cells
+                    FlowLayoutPanel movieFlowLayout = new FlowLayoutPanel
+                    {
+                        Dock = DockStyle.Fill,
+                        FlowDirection = FlowDirection.LeftToRight,
+                        WrapContents = true
+                    };
+
                     foreach (var movie in actor.Value)
                     {
-                        actorNode.Nodes.Add(new TreeNode(movie));
+                        Label movieLabel = new Label
+                        {
+                            Text = movie.Movie,
+                            Margin = new Padding(5),
+                            AutoSize = true
+                        };
+                        movieFlowLayout.Controls.Add(movieLabel);
                     }
-                    treeView.Nodes.Add(actorNode);
+
+                    // Add FlowLayoutPanel to bottom-left cell
+                    tableLayout.Controls.Add(movieFlowLayout, 0, 1);
+
+                    // Add empty panel to bottom-right cell (if needed, can be omitted)
+                    Panel emptyPanel = new Panel
+                    {
+                        Dock = DockStyle.Fill
+                    };
+                    tableLayout.Controls.Add(emptyPanel, 1, 1);
+
+                    // Add TableLayoutPanel to the main Panel
+                    panel.Controls.Add(tableLayout);
+
+
+
+
+                    // Add the Panel to the FlowLayoutPanel
+                    voiceActorFlow.Controls.Add(panel);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    //TableLayoutPanel panelGrid = new TableLayoutPanel
+                    //{
+                    //    Dock = DockStyle.Fill,
+                    //    Size = new System.Drawing.Size(voiceActorFlow.Width, 200),
+                    //    ColumnCount = 2,
+                    //    RowCount = 2,
+                    //    RowStyles = { new RowStyle(SizeType.Percent, 50), new RowStyle(SizeType.Percent, 50) },
+                    //    ColumnStyles = { new ColumnStyle(SizeType.Percent, 50), new ColumnStyle(SizeType.Percent, 50) }
+                    //};
+
+                    //Label nameLabel = new Label
+                    //{
+                    //    Text = actor.Key,
+                    //    AutoSize = true,
+                    //    Dock = DockStyle.Right,
+                    //};
+
+                    //panelGrid.Controls.Add(nameLabel, 1, 0); // Label in the top right
+
+
+
+
+                    //// Initialize the PictureBox
+                    //PictureBox pictureBox = new PictureBox
+                    //{
+                    //    //Image = Image.FromFile(@"images\ToyokawaShrine.png"), // Replace with the path to your image file
+                    //    SizeMode = PictureBoxSizeMode.AutoSize, // Adjust size mode as needed
+                    //    Dock = DockStyle.Left
+                    //};
+
+                    //FlowLayoutPanel animesFlow = new FlowLayoutPanel
+                    //{
+                    //    Dock = DockStyle.Fill,
+                    //    AutoScroll = true,
+                    //    FlowDirection = FlowDirection.TopDown,
+                    //    WrapContents = false
+                    //};
+
+                    //// Add controls to the Panel
+                    //panelGrid.Controls.Add(pictureBox, 0, 0); // PictureBox in the top left
+                    //panelGrid.Controls.Add(nameLabel, 1, 0); // Label in the top right
+                    //panelGrid.Controls.Add(animesFlow, 0, 1); // FlowLayoutPanel in the bottom row (spanning both columns)
+                    //panelGrid.SetColumnSpan(animesFlow, 2); // Span across both columns
+
+
+                    //foreach (var animeCharacter in actor.Value)
+                    //{
+                    //    Label animeLabel = new Label
+                    //    {
+                    //        Text = animeCharacter.Movie,
+                    //        AutoSize = true,
+                    //        Dock = DockStyle.Left,
+                    //        Padding = new Padding(0, 0, 10, 0) // Add some padding to separate from the PictureBox
+                    //    };
+                    //    animesFlow.Controls.Add(animeLabel);
+                    //}
+
+
+
+
+                    //voiceActorFlow.Controls.Add(nameLabel);
+
+
                 }
 
-                // Add TreeView to the form
-                tableLayoutPanel1.Controls.Add(treeView, 11, 1);
-                tableLayoutPanel1.SetColumnSpan(treeView, 8);
 
-                treeView.ExpandAll();
+
+
+                //TreeView treeView = new TreeView
+                //{
+                //    Dock = DockStyle.Fill
+                //};
+
+                //// Add nodes to TreeView
+                //foreach (var actor in voiceActorData)
+                //{
+                //    TreeNode actorNode = new TreeNode(actor.Key);
+                //    foreach (var movie in actor.Value)
+                //    {
+                //        actorNode.Nodes.Add(new TreeNode(movie));
+                //    }
+                //    treeView.Nodes.Add(actorNode);
+                //}
+
+                // Add TreeView to the form
+                //tableLayoutPanel1.Controls.Add(treeView, 11, 1);
+                //tableLayoutPanel1.SetColumnSpan(treeView, 8);
+
+                //treeView.ExpandAll();
 
                 split = true;
             }
         }
     }
 }
+
+public class MovieCharacter
+{
+    public string Movie { get; set; }
+    public string Character { get; set; }
+
+    public MovieCharacter(string movie, string character)
+    {
+        Movie = movie;
+        Character = character;
+    }
+
+    public override string ToString()
+    {
+        return $"Movie: {Movie}, Character: {Character}";
+    }
+}
+
