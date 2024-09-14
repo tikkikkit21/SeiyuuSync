@@ -1,4 +1,5 @@
-﻿using SeiyuuSync.JsonClasses;
+﻿using Amazon.Runtime.Internal.Transform;
+using SeiyuuSync.JsonClasses;
 using System.Text;
 using System.Text.Json;
 
@@ -14,7 +15,7 @@ namespace SeiyuuSync.Utils
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Constants.ACCESS_TOKEN);
         }
 
-        public async Task<AnimeSearchResponse> SearchAnime(string name)
+        public async Task<AnimeSearchResponse> FindAnime(string name)
         {
             string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit=5";
             string result = await client.GetStringAsync(query);
@@ -39,7 +40,7 @@ namespace SeiyuuSync.Utils
             return true;
         }
 
-        public async Task<Dictionary<string, string>> FindAnime(string animeName)
+        public async Task<Dictionary<string, List<string>>> FindVoiceActors(string animeName)
         {
             client.DefaultRequestHeaders.Clear();
             string query = @"
@@ -67,9 +68,9 @@ namespace SeiyuuSync.Utils
                     }
                   }
                 }";
-            var variables = new { search = animeName };
 
             // Wrap the query and variables into a single request payload
+            var variables = new { search = animeName };
             var requestPayload = new
             {
                 query,
@@ -84,7 +85,7 @@ namespace SeiyuuSync.Utils
 
             // Read the response body as a string
             string jsonResponse = await response.Content.ReadAsStringAsync();
-            Dictionary<string, string> vaDict = new Dictionary<string, string>();
+            Dictionary<string, List<string>> vaDict = new Dictionary<string, List<string>>();
             using (JsonDocument document = JsonDocument.Parse(jsonResponse))
             {
                 JsonElement root = document.RootElement;
@@ -110,7 +111,14 @@ namespace SeiyuuSync.Utils
                         if (language.ToUpper() == "JAPANESE")
                         {
                             string voiceActorName = voiceActor.GetProperty("name").GetProperty("full").GetString();
-                            vaDict.Add(voiceActorName, characterName);
+                            if (vaDict.ContainsKey(voiceActorName))
+                            {
+                                vaDict[voiceActorName].Add(characterName);
+                            }
+                            else
+                            {
+                                vaDict.Add(voiceActorName, new List<string> { characterName });
+                            }
                             break;
                         }
                     }
