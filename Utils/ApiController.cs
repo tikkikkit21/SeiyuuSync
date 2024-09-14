@@ -84,18 +84,6 @@ namespace SeiyuuSync.Utils
 
             // Read the response body as a string
             string jsonResponse = await response.Content.ReadAsStringAsync();
-            //dynamic responseObj = JsonSerializer.Deserialize<dynamic>(jsonResponse);
-            //foreach (var edge in responseObj["data"])
-            //{
-            //    string charName = edge["node"]["name"]["full"];
-            //    foreach (var va in edge["voiceActors"])
-            //    {
-            //        if (va["language"].ToString() == "Japanese")
-            //        {
-            //            string vaName = va["name"]["full"];
-            //        }
-            //    }
-            //}
             Dictionary<string, string> vaDict = new Dictionary<string, string>();
             using (JsonDocument document = JsonDocument.Parse(jsonResponse))
             {
@@ -130,8 +118,6 @@ namespace SeiyuuSync.Utils
             }
 
             return vaDict;
-
         }
-
     }
 }

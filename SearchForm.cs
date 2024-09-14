@@ -14,14 +14,8 @@ namespace SeiyuuSync
             InitializeComponent();
         }
 
-        private async void FindVoiceActors()
+        private async void AddVoiceActors(string animeName, Dictionary<string, string> vaDict)
         {
-            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
-            ApiController controller = new ApiController();
-
-            // va, char
-            Dictionary<string, string> vaDict = await controller.FindAnime(selectedAnime);
-
             DbController dbController = new DbController();
             foreach (KeyValuePair<string, string> kvp in vaDict)
             {
@@ -32,7 +26,7 @@ namespace SeiyuuSync
                 {
                     Character character = new Character
                     {
-                        AnimeName = selectedAnime,
+                        AnimeName = animeName,
                         CharacterName = charName
                     };
                     VoiceActor actor = new VoiceActor
@@ -43,6 +37,16 @@ namespace SeiyuuSync
                     await dbController.AddVoiceActor(actor);
                 }
             }
+        }
+
+        private async void FindVoiceActors()
+        {
+            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
+            ApiController controller = new ApiController();
+
+            // va, char
+            Dictionary<string, string> vaDict = await controller.FindAnime(selectedAnime);
+            AddVoiceActors(selectedAnime, vaDict);
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
