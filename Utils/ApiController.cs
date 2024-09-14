@@ -16,7 +16,7 @@ namespace SeiyuuSync.Utils
         public async Task<AnimeSearchResponse> SearchAnime(string name)
         {
             string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit=5";
-            string result = await client.GetStringAsync(name);
+            string result = await client.GetStringAsync(query);
             AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
             return response;
         }

@@ -40,7 +40,14 @@ namespace SeiyuuSync
         {
             string animeName = textBox1.Text;
             ApiController controller = new ApiController();
-            controller.SearchAnime(animeName);
+            AnimeSearchResponse response = await controller.SearchAnime(animeName);
+
+            dgvAnimeList.Rows.Clear();
+            dgvAnimeList.ClearSelection();
+            foreach (Node node in response.Nodes)
+            {
+                dgvAnimeList.Rows.Add(node.Anime.Title);
+            }
         }
     }
 }
