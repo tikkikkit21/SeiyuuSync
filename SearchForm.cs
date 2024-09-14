@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Xml;
 using Amazon.Runtime.Internal.Transform;
+using System.Xml.Linq;
 
 namespace SeiyuuSync
 {
@@ -24,22 +25,20 @@ namespace SeiyuuSync
         }
 
         /// <summary>
-        /// Finds all common VAs. This method takes in a dictionary of VAs and compares it with all VAs in the database
+        /// Finds all common VAs. This method takes in a List of VAs and compares it with all VAs in the database
         /// </summary>
         /// <param name="animeName">Name of anime</param>
-        /// <param name="vaDict">Dictionary of all VAs for this anime</param>
+        /// <param name="vaList">Dictionary of all VAs for this anime</param>
         /// <returns>Dictionary of common VAs</returns>
-        private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, Dictionary<string, List<string>> vaDict)
+        private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, List<VoiceActor> vaList)
         {
             Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
-            foreach (KeyValuePair<string, List<string>> kvp in vaDict)
+            foreach (VoiceActor voiceActor in vaList)
             {
-                string vaName = kvp.Key;
-                VoiceActor va = await dbController.FindVoiceActor(vaName);
-
-                if (va != null && va.Characters.Any(c => c.AnimeName != animeName))
+                VoiceActor va_db = await dbController.FindVoiceActor(voiceActor.Name);
+                if (va_db.Characters.Any(c => c.AnimeName != animeName))
                 {
-                    commonVas.Add(vaName, va.Characters.Where(c => c.AnimeName != animeName).ToList());
+                    commonVas.Add(va_db.Name, va_db.Characters.Where(c => c.AnimeName != animeName).ToList());
                 }
             }
 
@@ -50,23 +49,22 @@ namespace SeiyuuSync
         /// Adds all VAs in dictionary to MAL and DB
         /// </summary>
         /// <param name="animeName">Name of anime</param>
-        /// <param name="vaDict">Dictionary of VA info</param>
-        private async void AddVoiceActors(string animeName, Dictionary<string, List<string>> vaDict)
+        /// <param name="vaList">Dictionary of VA info</param>
+        private async void AddVoiceActors(string animeName, List<VoiceActor> vaList)
         {
             try
             {
-                foreach (KeyValuePair<string, List<string>> kvp in vaDict)
+                foreach (VoiceActor voiceActor in vaList)
                 {
-                    string vaName = kvp.Key;
-                    List<string> characters = kvp.Value;
+                    string vaName = voiceActor.Name;
+                    List<Character> characters = voiceActor.Characters;
 
                     if (await dbController.FindVoiceActor(vaName) == null)
                     {
-                        List<Character> list = characters.Select(c => new Character { AnimeName = animeName, CharacterName = c }).ToList();
                         VoiceActor actor = new VoiceActor
                         {
                             Name = vaName,
-                            Characters = list
+                            Characters = characters
                         };
                         await dbController.AddVoiceActor(actor);
                     }
@@ -83,18 +81,18 @@ namespace SeiyuuSync
         /// </summary>
         /// <param name="selectedAnime">Name of anime</param>
         /// <returns>Dictionary of VA info</returns>
-        private async Task<Dictionary<string, List<string>>?> FindVoiceActors(string selectedAnime)
+        private async Task<List<VoiceActor>> FindVoiceActors(string selectedAnime)
         {
+            List<VoiceActor> vaList = new List<VoiceActor>();
             try
             {
-                Dictionary<string, List<string>> vaDict = await apiController.FindVoiceActors(selectedAnime);
-                return vaDict;
+                vaList = await apiController.FindVoiceActors(selectedAnime);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return null;
             }
+            return vaList;
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
