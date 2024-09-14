@@ -39,7 +39,99 @@ namespace SeiyuuSync.Utils
             return true;
         }
 
-        //public async Task<> FindVoiceActor()
+        public async Task<Dictionary<string, string>> FindAnime(string animeName)
+        {
+            client.DefaultRequestHeaders.Clear();
+            string query = @"
+                query ($search: String) {
+                  Media(search: $search, type: ANIME) {
+                    id
+                    title {
+                      romaji
+                      english
+                    }
+                    characters {
+                      edges {
+                        node {
+                          name {
+                            full
+                          }
+                        }
+                        voiceActors {
+                          name {
+                            full
+                          }
+                          language
+                        }
+                      }
+                    }
+                  }
+                }";
+            var variables = new { search = animeName };
+
+            // Wrap the query and variables into a single request payload
+            var requestPayload = new
+            {
+                query,
+                variables
+            };
+
+            // Serialize the request payload to JSON
+            string jsonPayload = JsonSerializer.Serialize(requestPayload);
+            StringContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(Constants.ANILIST_ROOT, content);
+            response.EnsureSuccessStatusCode();
+
+            // Read the response body as a string
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+            //dynamic responseObj = JsonSerializer.Deserialize<dynamic>(jsonResponse);
+            //foreach (var edge in responseObj["data"])
+            //{
+            //    string charName = edge["node"]["name"]["full"];
+            //    foreach (var va in edge["voiceActors"])
+            //    {
+            //        if (va["language"].ToString() == "Japanese")
+            //        {
+            //            string vaName = va["name"]["full"];
+            //        }
+            //    }
+            //}
+            Dictionary<string, string> vaDict = new Dictionary<string, string>();
+            using (JsonDocument document = JsonDocument.Parse(jsonResponse))
+            {
+                JsonElement root = document.RootElement;
+
+                // Navigate to the relevant section of the JSON response
+                JsonElement media = root.GetProperty("data").GetProperty("Media");
+
+                // Navigate to the characters and iterate over them
+                JsonElement characters = media.GetProperty("characters").GetProperty("edges");
+
+                foreach (JsonElement characterEdge in characters.EnumerateArray())
+                {
+                    JsonElement characterNode = characterEdge.GetProperty("node");
+                    string characterName = characterNode.GetProperty("name").GetProperty("full").GetString();
+
+                    // Get the voice actors for this character
+                    JsonElement voiceActors = characterEdge.GetProperty("voiceActors");
+                    foreach (JsonElement voiceActor in voiceActors.EnumerateArray())
+                    {
+                        string language = voiceActor.GetProperty("language").GetString();
+
+                        // Filter for Japanese voice actors
+                        if (language.ToUpper() == "JAPANESE")
+                        {
+                            string voiceActorName = voiceActor.GetProperty("name").GetProperty("full").GetString();
+                            vaDict.Add(voiceActorName, characterName);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return vaDict;
+
+        }
 
     }
 }

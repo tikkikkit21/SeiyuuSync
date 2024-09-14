@@ -33,8 +33,33 @@ namespace SeiyuuSync
 
         private async void CompareButton_Click(object sender, EventArgs e)
         {
-            DbController db = new DbController();
-            await db.FindVoiceActor("Josh Gao");
+            string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
+            ApiController controller = new ApiController();
+
+            // va, char
+            Dictionary<string, string> vaDict = await controller.FindAnime(selectedAnime);
+
+            DbController dbController = new DbController();
+            foreach (KeyValuePair<string, string> kvp in vaDict)
+            {
+                string vaName = kvp.Key;
+                string charName = kvp.Value;
+
+                if (await dbController.FindVoiceActor(vaName) == null)
+                {
+                    Character character = new Character
+                    {
+                        AnimeName = selectedAnime,
+                        CharacterName = charName
+                    };
+                    VoiceActor actor = new VoiceActor
+                    {
+                        Name = vaName,
+                        Characters = [character]
+                    };
+                    await dbController.AddVoiceActor(actor);
+                }
+            }
         }
     }
 }

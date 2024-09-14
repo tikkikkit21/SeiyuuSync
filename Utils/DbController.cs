@@ -16,8 +16,14 @@ namespace SeiyuuSync.Utils
         public async Task<VoiceActor> FindVoiceActor(string name)
         {
             IMongoCollection<VoiceActor> collection = database.GetCollection<VoiceActor>("voice_actors");
-            VoiceActor result = collection.Find(va => va.Name == "Josh Gao").FirstOrDefault();
+            VoiceActor result = collection.Find(va => va.Name == name).FirstOrDefault();
             return result;
+        }
+
+        public async Task<bool> AddVoiceActor(VoiceActor va) {
+            IMongoCollection<VoiceActor> collection = database.GetCollection<VoiceActor>("voice_actors");
+            await collection.InsertOneAsync(va);
+            return true;
         }
     }
 }
