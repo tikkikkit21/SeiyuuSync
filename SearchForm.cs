@@ -47,6 +47,13 @@ namespace SeiyuuSync
                 string result = await client.GetStringAsync(query);
 
                 AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+
+                dgvAnimeList.Rows.Clear();
+                dgvAnimeList.ClearSelection();
+                foreach (Node node in response.Nodes)
+                {
+                    dgvAnimeList.Rows.Add(node.Anime.Title);
+                }
             }
         }
     }
