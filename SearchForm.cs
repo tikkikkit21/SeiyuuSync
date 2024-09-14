@@ -11,17 +11,27 @@ namespace SeiyuuSync
     public partial class SearchForm : Form
     {
 
+        bool split = false;
+        private static ApiController apiController;
+        private static DbController dbController;
 
 
         public SearchForm()
         {
             InitializeComponent();
+            apiController = new ApiController();
+            dbController = new DbController();
         }
 
+        /// <summary>
+        /// Finds all common VAs. This method takes in a dictionary of VAs and compares it with all VAs in the database
+        /// </summary>
+        /// <param name="animeName">Name of anime</param>
+        /// <param name="vaDict">Dictionary of all VAs for this anime</param>
+        /// <returns>Dictionary of common VAs</returns>
         private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, Dictionary<string, List<string>> vaDict)
         {
             Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
-            DbController dbController = new DbController();
             foreach (KeyValuePair<string, List<string>> kvp in vaDict)
             {
                 string vaName = kvp.Key;
@@ -36,59 +46,77 @@ namespace SeiyuuSync
             return commonVas;
         }
 
+        /// <summary>
+        /// Adds all VAs in dictionary to MAL and DB
+        /// </summary>
+        /// <param name="animeName">Name of anime</param>
+        /// <param name="vaDict">Dictionary of VA info</param>
         private async void AddVoiceActors(string animeName, Dictionary<string, List<string>> vaDict)
         {
-            DbController dbController = new DbController();
-            foreach (KeyValuePair<string, List<string>> kvp in vaDict)
+            try
             {
-                string vaName = kvp.Key;
-                List<string> characters = kvp.Value;
-
-                if (await dbController.FindVoiceActor(vaName) == null)
+                foreach (KeyValuePair<string, List<string>> kvp in vaDict)
                 {
-                    List<Character> list = characters.Select(c => new Character { AnimeName = animeName, CharacterName = c}).ToList();
-                    VoiceActor actor = new VoiceActor
+                    string vaName = kvp.Key;
+                    List<string> characters = kvp.Value;
+
+                    if (await dbController.FindVoiceActor(vaName) == null)
                     {
-                        Name = vaName,
-                        Characters = list
-                    };
-                    await dbController.AddVoiceActor(actor);
+                        List<Character> list = characters.Select(c => new Character { AnimeName = animeName, CharacterName = c }).ToList();
+                        VoiceActor actor = new VoiceActor
+                        {
+                            Name = vaName,
+                            Characters = list
+                        };
+                        await dbController.AddVoiceActor(actor);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
 
-        private async Task<Dictionary<string, List<string>>> FindVoiceActors(string selectedAnime)
+        /// <summary>
+        /// Finds all voice actors for a specificed anime
+        /// </summary>
+        /// <param name="selectedAnime">Name of anime</param>
+        /// <returns>Dictionary of VA info</returns>
+        private async Task<Dictionary<string, List<string>>?> FindVoiceActors(string selectedAnime)
         {
-            ApiController controller = new ApiController();
-
-            // va, [char]
-            Dictionary<string, List<string>> vaDict = await controller.FindVoiceActors(selectedAnime);
-            //AddVoiceActors(selectedAnime, vaDict);
-            return vaDict;
+            try
+            {
+                Dictionary<string, List<string>> vaDict = await apiController.FindVoiceActors(selectedAnime);
+                return vaDict;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
-            ApiController controller = new ApiController();
             int animeId = (int)dgvAnimeList.SelectedCells[colAnimeId.Index].Value;
-            await controller.AddAnime(animeId);
+            await apiController.AddAnime(animeId);
 
             // add to database
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
-            AddVoiceActors(selectedAnime, await controller.FindVoiceActors(selectedAnime));
+            AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
             string animeName = tbxSearch.Text;
-            ApiController controller = new ApiController();
-            AnimeSearchResponse response = await controller.FindAnime(animeName);
+            List<Anime> animes= await apiController.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
             dgvAnimeList.ClearSelection();
-            foreach (Node node in response.Nodes)
+            foreach (Anime anime in animes)
             {
-                dgvAnimeList.Rows.Add(node.Anime.Id, node.Anime.Title);
+                dgvAnimeList.Rows.Add(anime.Id, anime.Title);
             }
         }
 
