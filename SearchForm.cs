@@ -30,15 +30,15 @@ namespace SeiyuuSync
         /// <param name="animeName">Name of anime</param>
         /// <param name="vaList">Dictionary of all VAs for this anime</param>
         /// <returns>Dictionary of common VAs</returns>
-        private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, List<VoiceActor> vaList)
+        private async Task<List<VoiceActor>> FindCommonVas(string animeName, List<VoiceActor> vaList)
         {
-            Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
+            List<VoiceActor> commonVas = new List<VoiceActor>();
             foreach (VoiceActor voiceActor in vaList)
             {
                 VoiceActor va_db = await dbController.FindVoiceActor(voiceActor.Name);
-                if (va_db.Characters.Any(c => c.AnimeName != animeName))
+                if (va_db!= null && va_db.Characters.Any(c => c.AnimeName != animeName))
                 {
-                    commonVas.Add(va_db.Name, va_db.Characters.Where(c => c.AnimeName != animeName).ToList());
+                    commonVas.Add(va_db);
                 }
             }
 
@@ -135,7 +135,7 @@ namespace SeiyuuSync
         private async void CompareButton_Click(object sender, EventArgs e)
         {
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
-            Dictionary<string, List<Character>> voiceActors = await FindCommonVas(selectedAnime, await FindVoiceActors(selectedAnime));
+            List<VoiceActor> voiceActors = await FindCommonVas(selectedAnime, await FindVoiceActors(selectedAnime));
 
 
             //tableLayoutPanel1.Controls.Remove(dgvAnimeList);
@@ -189,16 +189,20 @@ namespace SeiyuuSync
                 // Create and add PictureBox to top-left cell
                 PictureBox pictureBox = new PictureBox
                 {
-                    //Image = Image.FromFile("path_to_picture.jpg"), // Replace with actual image path
+                    Image = Image.FromFile("images/default.jpg"), // Replace with actual image path
                     SizeMode = PictureBoxSizeMode.StretchImage,
                     Dock = DockStyle.Fill
                 };
                 tableLayout.Controls.Add(pictureBox, 0, 0);
+                if (!string.IsNullOrEmpty(actor.ImageUrl))
+                {
+                    pictureBox.LoadAsync(actor.ImageUrl);
+                }
 
                 // Create and add Label to top-right cell
                 Label nameLabel = new Label
                 {
-                    Text = actor.Key,
+                    Text = actor.Name,
                     Dock = DockStyle.Fill,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
@@ -212,7 +216,7 @@ namespace SeiyuuSync
                     WrapContents = true
                 };
 
-                foreach (var character in actor.Value)
+                foreach (var character in actor.Characters)
                 {
                     Label movieLabel = new Label
                     {
