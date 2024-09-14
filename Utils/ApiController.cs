@@ -24,38 +24,60 @@ namespace SeiyuuSync.Utils
         /// <param name="name">Name of anime to query</param>
         /// <param name="limit">Number of results to display (default 10)</param>
         /// <returns>AnimeSearchResponse mirroring the JSON structure</returns>
-        public async Task<AnimeSearchResponse?> FindAnime(string name, int limit = 10)
+        public async Task<List<Anime>> FindAnime(string name, int limit = 10)
         {
+            List<Anime> animes = new List<Anime>();
+            string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit={limit}";
+
             try
             {
-                string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit={limit}";
                 string result = await client.GetStringAsync(query);
-                return JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+                AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+                
+                if (response != null)
+                {
+                    foreach (Node node in response.Nodes)
+                    {
+                        animes.Add(node.Anime);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return null;
             }
+
+            return animes;
         }
 
         /// <summary>
         /// Gets my personal MAL list of animes
         /// </summary>
         /// <returns>AnimeSearchResponse mirroring the JSON structure</returns>
-        public async Task<AnimeSearchResponse?> GetMyAnimes()
+        public async Task<List<Anime>> GetMyAnimes()
         {
+            List<Anime> animes = new List<Anime>();
+
             try
             {
                 string query = $"{Constants.MAL_ROOT}/users/@me/animelist";
                 var result = await client.GetStringAsync(query);
-                return JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+                AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+
+                if (response != null)
+                {
+                    foreach (Node node in response.Nodes)
+                    {
+                        animes.Add(node.Anime);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return null;
             }
+
+            return animes;
         }
 
         /// <summary>
