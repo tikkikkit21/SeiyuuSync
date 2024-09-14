@@ -10,28 +10,8 @@ namespace SeiyuuSync
         {
             InitializeComponent();
         }
-        private async void AddButton_Click(object sender, EventArgs e)
-        {
-            ApiController controller = new ApiController();
-            int animeId = (int)dgvAnimeList.SelectedCells[colAnimeId.Index].Value;
-            await controller.AddAnime(animeId);
-        }
 
-        private async void btnSearch_Click(object sender, EventArgs e)
-        {
-            string animeName = tbxSearch.Text;
-            ApiController controller = new ApiController();
-            AnimeSearchResponse response = await controller.SearchAnime(animeName);
-
-            dgvAnimeList.Rows.Clear();
-            dgvAnimeList.ClearSelection();
-            foreach (Node node in response.Nodes)
-            {
-                dgvAnimeList.Rows.Add(node.Anime.Id, node.Anime.Title);
-            }
-        }
-
-        private async void CompareButton_Click(object sender, EventArgs e)
+        private async void FindVoiceActors()
         {
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
             ApiController controller = new ApiController();
@@ -60,6 +40,32 @@ namespace SeiyuuSync
                     await dbController.AddVoiceActor(actor);
                 }
             }
+        }
+
+        private async void AddButton_Click(object sender, EventArgs e)
+        {
+            ApiController controller = new ApiController();
+            int animeId = (int)dgvAnimeList.SelectedCells[colAnimeId.Index].Value;
+            await controller.AddAnime(animeId);
+        }
+
+        private async void btnSearch_Click(object sender, EventArgs e)
+        {
+            string animeName = tbxSearch.Text;
+            ApiController controller = new ApiController();
+            AnimeSearchResponse response = await controller.SearchAnime(animeName);
+
+            dgvAnimeList.Rows.Clear();
+            dgvAnimeList.ClearSelection();
+            foreach (Node node in response.Nodes)
+            {
+                dgvAnimeList.Rows.Add(node.Anime.Id, node.Anime.Title);
+            }
+        }
+
+        private void CompareButton_Click(object sender, EventArgs e)
+        {
+            FindVoiceActors();
         }
     }
 }
