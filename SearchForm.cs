@@ -107,8 +107,21 @@ namespace SeiyuuSync
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
+            doSearch();
+        }
+        private void tbxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                doSearch();
+            }
+        }
+
+        private async void doSearch()
+        {
             string animeName = tbxSearch.Text;
-            List<Anime> animes= await apiController.FindAnime(animeName);
+            List<Anime> animes = await apiController.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
             dgvAnimeList.ClearSelection();
@@ -116,6 +129,7 @@ namespace SeiyuuSync
             {
                 dgvAnimeList.Rows.Add(anime.Id, anime.Title);
             }
+
         }
 
         private async void CompareButton_Click(object sender, EventArgs e)
@@ -150,7 +164,7 @@ namespace SeiyuuSync
                 {
                     BorderStyle = BorderStyle.FixedSingle,
                     Width = voiceActorFlow.Width - 50,
-                    Height = 500,
+                    Height = 200,
                     Margin = new Padding(10)
                 };
 
@@ -211,6 +225,9 @@ namespace SeiyuuSync
 
                 // Add FlowLayoutPanel to bottom-left cell
                 tableLayout.Controls.Add(movieFlowLayout, 0, 1);
+                tableLayout.SetColumnSpan(movieFlowLayout, 2);
+
+                panel.Height = 200 + movieFlowLayout.Height;
 
                 // Add empty panel to bottom-right cell (if needed, can be omitted)
                 Panel emptyPanel = new Panel

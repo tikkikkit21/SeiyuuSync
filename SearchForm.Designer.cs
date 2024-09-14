@@ -54,7 +54,7 @@
             tbxSearch.Name = "tbxSearch";
             tbxSearch.Size = new Size(325, 31);
             tbxSearch.TabIndex = 0;
-            tbxSearch.Text = "search anime...";
+            tbxSearch.KeyDown += tbxSearch_KeyDown;
             // 
             // dgvAnimeList
             // 
