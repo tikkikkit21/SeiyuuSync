@@ -46,22 +46,29 @@ namespace SeiyuuSync
         /// <param name="vaDict">Dictionary of VA info</param>
         private async void AddVoiceActors(string animeName, Dictionary<string, List<string>> vaDict)
         {
-            DbController dbController = new DbController();
-            foreach (KeyValuePair<string, List<string>> kvp in vaDict)
+            try
             {
-                string vaName = kvp.Key;
-                List<string> characters = kvp.Value;
-
-                if (await dbController.FindVoiceActor(vaName) == null)
+                DbController dbController = new DbController();
+                foreach (KeyValuePair<string, List<string>> kvp in vaDict)
                 {
-                    List<Character> list = characters.Select(c => new Character { AnimeName = animeName, CharacterName = c}).ToList();
-                    VoiceActor actor = new VoiceActor
+                    string vaName = kvp.Key;
+                    List<string> characters = kvp.Value;
+
+                    if (await dbController.FindVoiceActor(vaName) == null)
                     {
-                        Name = vaName,
-                        Characters = list
-                    };
-                    await dbController.AddVoiceActor(actor);
+                        List<Character> list = characters.Select(c => new Character { AnimeName = animeName, CharacterName = c }).ToList();
+                        VoiceActor actor = new VoiceActor
+                        {
+                            Name = vaName,
+                            Characters = list
+                        };
+                        await dbController.AddVoiceActor(actor);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
 
@@ -70,14 +77,22 @@ namespace SeiyuuSync
         /// </summary>
         /// <param name="selectedAnime">Name of anime</param>
         /// <returns>Dictionary of VA info</returns>
-        private async Task<Dictionary<string, List<string>>> FindVoiceActors(string selectedAnime)
+        private async Task<Dictionary<string, List<string>>?> FindVoiceActors(string selectedAnime)
         {
-            ApiController controller = new ApiController();
+            try
+            {
+                ApiController controller = new ApiController();
 
-            // va, [char]
-            Dictionary<string, List<string>> vaDict = await controller.FindVoiceActors(selectedAnime);
-            //AddVoiceActors(selectedAnime, vaDict);
-            return vaDict;
+                // va, [char]
+                Dictionary<string, List<string>> vaDict = await controller.FindVoiceActors(selectedAnime);
+                //AddVoiceActors(selectedAnime, vaDict);
+                return vaDict;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
         private async void AddButton_Click(object sender, EventArgs e)

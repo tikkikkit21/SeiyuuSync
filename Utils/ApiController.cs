@@ -24,24 +24,38 @@ namespace SeiyuuSync.Utils
         /// <param name="name">Name of anime to query</param>
         /// <param name="limit">Number of results to display (default 10)</param>
         /// <returns>AnimeSearchResponse mirroring the JSON structure</returns>
-        public async Task<AnimeSearchResponse> FindAnime(string name, int limit = 10)
+        public async Task<AnimeSearchResponse?> FindAnime(string name, int limit = 10)
         {
-            string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit={limit}";
-            string result = await client.GetStringAsync(query);
-            AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
-            return response;
+            try
+            {
+                string query = $"{Constants.MAL_ROOT}/anime?q={name}&limit={limit}";
+                string result = await client.GetStringAsync(query);
+                return JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
         /// <summary>
         /// Gets my personal MAL list of animes
         /// </summary>
         /// <returns>AnimeSearchResponse mirroring the JSON structure</returns>
-        public async Task<AnimeSearchResponse> GetMyAnimes()
+        public async Task<AnimeSearchResponse?> GetMyAnimes()
         {
-            string query = $"{Constants.MAL_ROOT}/users/@me/animelist";
-            var result = await client.GetStringAsync(query);
-            AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
-            return response;
+            try
+            {
+                string query = $"{Constants.MAL_ROOT}/users/@me/animelist";
+                var result = await client.GetStringAsync(query);
+                return JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -51,11 +65,19 @@ namespace SeiyuuSync.Utils
         /// <returns>Boolean indicating success</returns>
         public async Task<bool> AddAnime(int animeId)
         {
-            string query = $"{Constants.MAL_ROOT}/anime/{animeId}/my_list_status";
-            StringContent body = new StringContent("{}", Encoding.UTF8, "application/json");
-            var result = await client.PutAsync(query, body);
-            result.EnsureSuccessStatusCode();
-            return true;
+            try
+            {
+                string query = $"{Constants.MAL_ROOT}/anime/{animeId}/my_list_status";
+                StringContent body = new StringContent("{}", Encoding.UTF8, "application/json");
+                var result = await client.PutAsync(query, body);
+                result.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
         }
 
         /// <summary>
@@ -65,8 +87,10 @@ namespace SeiyuuSync.Utils
         /// <returns>Dictionary of VA names associated with a list of characters</returns>
         public async Task<Dictionary<string, List<string>>> FindVoiceActors(string animeName)
         {
-            client.DefaultRequestHeaders.Clear();
-            string query = @"
+            try
+            {
+                client.DefaultRequestHeaders.Clear();
+                string query = @"
                 query ($search: String) {
                   Media(search: $search, type: ANIME) {
                     id
@@ -92,63 +116,69 @@ namespace SeiyuuSync.Utils
                   }
                 }";
 
-            // Wrap the query and variables into a single request payload
-            var variables = new { search = animeName };
-            var requestPayload = new
-            {
-                query,
-                variables
-            };
-
-            // Serialize the request payload to JSON
-            string jsonPayload = JsonSerializer.Serialize(requestPayload);
-            StringContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(Constants.ANILIST_ROOT, content);
-            response.EnsureSuccessStatusCode();
-
-            // Read the response body as a string
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-            Dictionary<string, List<string>> vaDict = new Dictionary<string, List<string>>();
-            using (JsonDocument document = JsonDocument.Parse(jsonResponse))
-            {
-                JsonElement root = document.RootElement;
-
-                // Navigate to the relevant section of the JSON response
-                JsonElement media = root.GetProperty("data").GetProperty("Media");
-
-                // Navigate to the characters and iterate over them
-                JsonElement characters = media.GetProperty("characters").GetProperty("edges");
-
-                foreach (JsonElement characterEdge in characters.EnumerateArray())
+                // Wrap the query and variables into a single request payload
+                var variables = new { search = animeName };
+                var requestPayload = new
                 {
-                    JsonElement characterNode = characterEdge.GetProperty("node");
-                    string characterName = characterNode.GetProperty("name").GetProperty("full").GetString();
+                    query,
+                    variables
+                };
 
-                    // Get the voice actors for this character
-                    JsonElement voiceActors = characterEdge.GetProperty("voiceActors");
-                    foreach (JsonElement voiceActor in voiceActors.EnumerateArray())
+                // Serialize the request payload to JSON
+                string jsonPayload = JsonSerializer.Serialize(requestPayload);
+                StringContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(Constants.ANILIST_ROOT, content);
+                response.EnsureSuccessStatusCode();
+
+                // Read the response body as a string
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                Dictionary<string, List<string>> vaDict = new Dictionary<string, List<string>>();
+                using (JsonDocument document = JsonDocument.Parse(jsonResponse))
+                {
+                    JsonElement root = document.RootElement;
+
+                    // Navigate to the relevant section of the JSON response
+                    JsonElement media = root.GetProperty("data").GetProperty("Media");
+
+                    // Navigate to the characters and iterate over them
+                    JsonElement characters = media.GetProperty("characters").GetProperty("edges");
+
+                    foreach (JsonElement characterEdge in characters.EnumerateArray())
                     {
-                        string language = voiceActor.GetProperty("language").GetString();
+                        JsonElement characterNode = characterEdge.GetProperty("node");
+                        string characterName = characterNode.GetProperty("name").GetProperty("full").GetString();
 
-                        // Filter for Japanese voice actors
-                        if (language.ToUpper() == "JAPANESE")
+                        // Get the voice actors for this character
+                        JsonElement voiceActors = characterEdge.GetProperty("voiceActors");
+                        foreach (JsonElement voiceActor in voiceActors.EnumerateArray())
                         {
-                            string voiceActorName = voiceActor.GetProperty("name").GetProperty("full").GetString();
-                            if (vaDict.ContainsKey(voiceActorName))
+                            string language = voiceActor.GetProperty("language").GetString();
+
+                            // Filter for Japanese voice actors
+                            if (language.ToUpper() == "JAPANESE")
                             {
-                                vaDict[voiceActorName].Add(characterName);
+                                string voiceActorName = voiceActor.GetProperty("name").GetProperty("full").GetString();
+                                if (vaDict.ContainsKey(voiceActorName))
+                                {
+                                    vaDict[voiceActorName].Add(characterName);
+                                }
+                                else
+                                {
+                                    vaDict.Add(voiceActorName, new List<string> { characterName });
+                                }
+                                break;
                             }
-                            else
-                            {
-                                vaDict.Add(voiceActorName, new List<string> { characterName });
-                            }
-                            break;
                         }
                     }
                 }
-            }
 
-            return vaDict;
+                return vaDict;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
     }
 }
