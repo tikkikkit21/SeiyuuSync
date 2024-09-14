@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeiyuuSync.JsonClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -46,7 +48,7 @@ namespace SeiyuuSync
         private async void btnSearch_Click(object sender, EventArgs e)
         {
             string animeName = textBox1.Text;
-            string query = $"{Constants.MAL_ROOT}/anime?q={animeName}&limit=25";
+            string query = $"{Constants.MAL_ROOT}/anime?q={animeName}&limit=5";
 
             using (HttpClient client = new())
             {
@@ -54,6 +56,8 @@ namespace SeiyuuSync
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Constants.ACCESS_TOKEN);
 
                 string result = await client.GetStringAsync(query);
+
+                AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
             }
         }
     }
