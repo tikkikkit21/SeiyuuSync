@@ -14,6 +14,24 @@ namespace SeiyuuSync
             InitializeComponent();
         }
 
+        private async Task<Dictionary<string, List<Character>>> FindCommonVas(Dictionary<string, string> vaDict)
+        {
+            Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
+            DbController dbController = new DbController();
+            foreach (KeyValuePair<string, string> kvp in vaDict)
+            {
+                string vaName = kvp.Key;
+                VoiceActor va = await dbController.FindVoiceActor(vaName);
+
+                if (va != null)
+                {
+                    commonVas.Add(vaName, va.Characters);
+                }
+            }
+
+            return commonVas;
+        }
+
         private async void AddVoiceActors(string animeName, Dictionary<string, string> vaDict)
         {
             DbController dbController = new DbController();
