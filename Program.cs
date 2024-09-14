@@ -22,6 +22,7 @@ namespace SeiyuuSync
 
             // Load in env variables
             Constants.ACCESS_TOKEN = Configuration.GetSection("access_token").Get<string>();
+            Constants.DB_SRV = Configuration.GetSection("db_connection").Get<string>();
 
             ApplicationConfiguration.Initialize();
             Application.Run(new HomeForm());
