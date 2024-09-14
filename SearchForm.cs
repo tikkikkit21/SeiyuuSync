@@ -11,9 +11,14 @@ namespace SeiyuuSync
     public partial class SearchForm : Form
     {
         bool split = false;
+        private static ApiController apiController;
+        private static DbController dbController;
+
         public SearchForm()
         {
             InitializeComponent();
+            apiController = new ApiController();
+            dbController = new DbController();
         }
 
         /// <summary>
@@ -25,7 +30,6 @@ namespace SeiyuuSync
         private async Task<Dictionary<string, List<Character>>> FindCommonVas(string animeName, Dictionary<string, List<string>> vaDict)
         {
             Dictionary<string, List<Character>> commonVas = new Dictionary<string, List<Character>>();
-            DbController dbController = new DbController();
             foreach (KeyValuePair<string, List<string>> kvp in vaDict)
             {
                 string vaName = kvp.Key;
@@ -49,7 +53,6 @@ namespace SeiyuuSync
         {
             try
             {
-                DbController dbController = new DbController();
                 foreach (KeyValuePair<string, List<string>> kvp in vaDict)
                 {
                     string vaName = kvp.Key;
@@ -82,11 +85,7 @@ namespace SeiyuuSync
         {
             try
             {
-                ApiController controller = new ApiController();
-
-                // va, [char]
-                Dictionary<string, List<string>> vaDict = await controller.FindVoiceActors(selectedAnime);
-                //AddVoiceActors(selectedAnime, vaDict);
+                Dictionary<string, List<string>> vaDict = await apiController.FindVoiceActors(selectedAnime);
                 return vaDict;
             }
             catch (Exception ex)
@@ -98,20 +97,18 @@ namespace SeiyuuSync
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
-            ApiController controller = new ApiController();
             int animeId = (int)dgvAnimeList.SelectedCells[colAnimeId.Index].Value;
-            await controller.AddAnime(animeId);
+            await apiController.AddAnime(animeId);
 
             // add to database
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
-            AddVoiceActors(selectedAnime, await controller.FindVoiceActors(selectedAnime));
+            AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
             string animeName = tbxSearch.Text;
-            ApiController controller = new ApiController();
-            List<Anime> animes= await controller.FindAnime(animeName);
+            List<Anime> animes= await apiController.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
             dgvAnimeList.ClearSelection();
