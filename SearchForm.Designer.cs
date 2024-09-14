@@ -38,6 +38,7 @@
             CompareButton = new Button();
             AddButton = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
+            voiceActorFlow = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)dgvAnimeList).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -61,16 +62,16 @@
             dgvAnimeList.AllowUserToDeleteRows = false;
             dgvAnimeList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAnimeList.Columns.AddRange(new DataGridViewColumn[] { colAnimeId, colAnimeName });
-            tableLayoutPanel1.SetColumnSpan(dgvAnimeList, 12);
+            tableLayoutPanel1.SetColumnSpan(dgvAnimeList, 10);
             dgvAnimeList.Dock = DockStyle.Fill;
-            dgvAnimeList.Location = new Point(163, 78);
+            dgvAnimeList.Location = new Point(43, 78);
             dgvAnimeList.MultiSelect = false;
             dgvAnimeList.Name = "dgvAnimeList";
             dgvAnimeList.ReadOnly = true;
             dgvAnimeList.RowHeadersVisible = false;
             dgvAnimeList.RowHeadersWidth = 62;
             dgvAnimeList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvAnimeList.Size = new Size(474, 631);
+            dgvAnimeList.Size = new Size(394, 631);
             dgvAnimeList.TabIndex = 4;
             // 
             // colAnimeId
@@ -124,9 +125,10 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5.00003147F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5.00003147F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 4.99940538F));
-            tableLayoutPanel1.Controls.Add(dgvAnimeList, 4, 1);
+            tableLayoutPanel1.Controls.Add(dgvAnimeList, 1, 1);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 4, 2);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 4, 0);
+            tableLayoutPanel1.Controls.Add(voiceActorFlow, 11, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -195,6 +197,18 @@
             tableLayoutPanel3.Size = new Size(474, 69);
             tableLayoutPanel3.TabIndex = 7;
             // 
+            // voiceActorFlow
+            // 
+            voiceActorFlow.AutoScroll = true;
+            tableLayoutPanel1.SetColumnSpan(voiceActorFlow, 8);
+            voiceActorFlow.Dock = DockStyle.Fill;
+            voiceActorFlow.FlowDirection = FlowDirection.TopDown;
+            voiceActorFlow.Location = new Point(443, 78);
+            voiceActorFlow.Name = "voiceActorFlow";
+            voiceActorFlow.Size = new Size(314, 631);
+            voiceActorFlow.TabIndex = 8;
+            voiceActorFlow.WrapContents = false;
+            // 
             // SearchForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -225,5 +239,6 @@
         private TableLayoutPanel tableLayoutPanel3;
         private DataGridViewTextBoxColumn colAnimeId;
         private DataGridViewTextBoxColumn colAnimeName;
+        private FlowLayoutPanel voiceActorFlow;
     }
 }
