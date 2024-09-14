@@ -32,6 +32,7 @@
             SearchButton = new Button();
             Title = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
+            label1 = new Label();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -52,14 +53,14 @@
             Title.AutoSize = true;
             Title.BackColor = Color.Transparent;
             Title.Dock = DockStyle.Fill;
-            Title.Font = new Font("Segoe UI", 20F);
-            Title.Location = new Point(102, 150);
+            Title.Font = new Font("Segoe UI", 36F);
+            Title.Location = new Point(102, 0);
             Title.Margin = new Padding(2, 0, 2, 0);
             Title.Name = "Title";
-            Title.Size = new Size(952, 416);
+            Title.Size = new Size(952, 150);
             Title.TabIndex = 1;
             Title.Text = "SeiyuuSync";
-            Title.TextAlign = ContentAlignment.TopCenter;
+            Title.TextAlign = ContentAlignment.MiddleCenter;
             Title.Click += Title_Click;
             // 
             // tableLayoutPanel1
@@ -69,8 +70,9 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
-            tableLayoutPanel1.Controls.Add(Title, 1, 1);
             tableLayoutPanel1.Controls.Add(SearchButton, 1, 2);
+            tableLayoutPanel1.Controls.Add(Title, 1, 0);
+            tableLayoutPanel1.Controls.Add(label1, 1, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -80,6 +82,16 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
             tableLayoutPanel1.Size = new Size(1156, 666);
             tableLayoutPanel1.TabIndex = 2;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 14F);
+            label1.Location = new Point(103, 150);
+            label1.Name = "label1";
+            label1.Size = new Size(945, 75);
+            label1.TabIndex = 2;
+            label1.Text = resources.GetString("label1.Text");
             // 
             // HomeForm
             // 
@@ -104,5 +116,6 @@
         private Button SearchButton;
         private Label Title;
         private TableLayoutPanel tableLayoutPanel1;
+        private Label label1;
     }
 }

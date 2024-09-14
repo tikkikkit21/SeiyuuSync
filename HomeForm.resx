@@ -117,11 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>SeiyuuSync is an application that allows you to search up animes and view all the voice actors that have voiced other animes you've watched. For each common voice actor, it will list each anime series and character that they've voiced.</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAB3wAAAQQCAYAAAAJXCoPAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wAAADsABataJCQAA/7JJREFUeF7s/WubJDmVpgvz///NDF1VGSePyMymu6E4NIcGGgooKKCKgu6ZPbP3
+        vwAADr8BOAVTJAAA/7JJREFUeF7s/WubJDmVpgvz///NDF1VGSePyMymu6E4NIcGGgooKKCKgu6ZPbP3
         +zXftSQ90qOlR3bwQ2REZny4LzOTlpbJzM3Nzf12mX3nd3e37xK3md9vxdpk7hK/W+Tw7gvmsI/fdtxP
         +c0JqHyJu8wXHdavgm/bGthHzB9O4vbdH+w1WOLLjptF/ki08phjKyXnDbju+FPiKnPtvFoAMQG0TyAn
         k+O+qryS8Lp0ec6j4bjP3v3pKtDVB6586jGF2NbrC3+0dXVchWXG61b4svBHz828+ozw5Z4vA3185kvJ
