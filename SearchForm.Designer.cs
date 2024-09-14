@@ -41,7 +41,7 @@
             // 
             textBox1.ForeColor = SystemColors.ScrollBar;
             textBox1.Location = new Point(189, 44);
-            textBox1.Margin = new Padding(2, 2, 2, 2);
+            textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(188, 23);
             textBox1.TabIndex = 0;
@@ -51,7 +51,7 @@
             // AddButton
             // 
             AddButton.Location = new Point(140, 423);
-            AddButton.Margin = new Padding(2, 2, 2, 2);
+            AddButton.Margin = new Padding(2);
             AddButton.Name = "AddButton";
             AddButton.Size = new Size(78, 20);
             AddButton.TabIndex = 1;
@@ -62,7 +62,7 @@
             // CompareButton
             // 
             CompareButton.Location = new Point(298, 423);
-            CompareButton.Margin = new Padding(2, 2, 2, 2);
+            CompareButton.Margin = new Padding(2);
             CompareButton.Name = "CompareButton";
             CompareButton.Size = new Size(78, 20);
             CompareButton.TabIndex = 3;
@@ -76,7 +76,7 @@
             dgvAnimeList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvAnimeList.Columns.AddRange(new DataGridViewColumn[] { Column1 });
             dgvAnimeList.Location = new Point(148, 107);
-            dgvAnimeList.Margin = new Padding(2, 2, 2, 2);
+            dgvAnimeList.Margin = new Padding(2);
             dgvAnimeList.Name = "dgvAnimeList";
             dgvAnimeList.ReadOnly = true;
             dgvAnimeList.RowHeadersVisible = false;
@@ -101,6 +101,7 @@
             btnSearch.TabIndex = 5;
             btnSearch.Text = "Search";
             btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
             // 
             // SearchForm
             // 
@@ -112,7 +113,7 @@
             Controls.Add(CompareButton);
             Controls.Add(AddButton);
             Controls.Add(textBox1);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "SearchForm";
             Text = "SearchForm";
             ((System.ComponentModel.ISupportInitialize)dgvAnimeList).EndInit();
