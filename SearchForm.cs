@@ -30,5 +30,11 @@ namespace SeiyuuSync
                 dgvAnimeList.Rows.Add(node.Anime.Id, node.Anime.Title);
             }
         }
+
+        private async void CompareButton_Click(object sender, EventArgs e)
+        {
+            DbController db = new DbController();
+            await db.FindVoiceActor("Josh Gao");
+        }
     }
 }

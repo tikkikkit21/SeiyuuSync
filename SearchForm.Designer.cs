@@ -148,6 +148,7 @@
             CompareButton.TabIndex = 3;
             CompareButton.Text = "Compare";
             CompareButton.UseVisualStyleBackColor = true;
+            CompareButton.Click += CompareButton_Click;
             // 
             // AddButton
             // 
