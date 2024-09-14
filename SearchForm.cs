@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using SeiyuuSync.JsonClasses;
+using System.Text.Json;
 
 namespace SeiyuuSync
 {
@@ -40,6 +33,21 @@ namespace SeiyuuSync
         private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+        private async void btnSearch_Click(object sender, EventArgs e)
+        {
+            string animeName = textBox1.Text;
+            string query = $"{Constants.MAL_ROOT}/anime?q={animeName}&limit=5";
+
+            using (HttpClient client = new())
+            {
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Constants.ACCESS_TOKEN);
+
+                string result = await client.GetStringAsync(query);
+
+                AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
+            }
         }
     }
 }
