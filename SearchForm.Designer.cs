@@ -30,14 +30,14 @@
         {
             tbxSearch = new TextBox();
             dgvAnimeList = new DataGridView();
+            colAnimeId = new DataGridViewTextBoxColumn();
+            colAnimeName = new DataGridViewTextBoxColumn();
             btnSearch = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             CompareButton = new Button();
             AddButton = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
-            colAnimeId = new DataGridViewTextBoxColumn();
-            colAnimeName = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dgvAnimeList).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -64,12 +64,30 @@
             dgvAnimeList.Dock = DockStyle.Fill;
             dgvAnimeList.Location = new Point(114, 46);
             dgvAnimeList.Margin = new Padding(2);
+            dgvAnimeList.MultiSelect = false;
             dgvAnimeList.Name = "dgvAnimeList";
             dgvAnimeList.ReadOnly = true;
             dgvAnimeList.RowHeadersVisible = false;
             dgvAnimeList.RowHeadersWidth = 62;
+            dgvAnimeList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvAnimeList.Size = new Size(332, 378);
             dgvAnimeList.TabIndex = 4;
+            // 
+            // colAnimeId
+            // 
+            colAnimeId.HeaderText = "ID";
+            colAnimeId.MinimumWidth = 25;
+            colAnimeId.Name = "colAnimeId";
+            colAnimeId.ReadOnly = true;
+            colAnimeId.Width = 50;
+            // 
+            // colAnimeName
+            // 
+            colAnimeName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colAnimeName.HeaderText = "Anime";
+            colAnimeName.MinimumWidth = 8;
+            colAnimeName.Name = "colAnimeName";
+            colAnimeName.ReadOnly = true;
             // 
             // btnSearch
             // 
@@ -158,22 +176,6 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.Size = new Size(332, 40);
             tableLayoutPanel3.TabIndex = 7;
-            // 
-            // colAnimeId
-            // 
-            colAnimeId.HeaderText = "ID";
-            colAnimeId.MinimumWidth = 25;
-            colAnimeId.Name = "colAnimeId";
-            colAnimeId.ReadOnly = true;
-            colAnimeId.Width = 50;
-            // 
-            // colAnimeName
-            // 
-            colAnimeName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            colAnimeName.HeaderText = "Anime";
-            colAnimeName.MinimumWidth = 8;
-            colAnimeName.Name = "colAnimeName";
-            colAnimeName.ReadOnly = true;
             // 
             // SearchForm
             // 

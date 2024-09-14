@@ -13,7 +13,8 @@ namespace SeiyuuSync
         private async void AddButton_Click(object sender, EventArgs e)
         {
             ApiController controller = new ApiController();
-            await controller.GetMyAnimes();
+            int animeId = (int)dgvAnimeList.SelectedCells[colAnimeId.Index].Value;
+            await controller.AddAnime(animeId);
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)

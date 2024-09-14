@@ -1,4 +1,5 @@
 ﻿using SeiyuuSync.JsonClasses;
+using System.Text;
 using System.Text.Json;
 
 namespace SeiyuuSync.Utils
@@ -27,6 +28,15 @@ namespace SeiyuuSync.Utils
             var result = await client.GetStringAsync(query);
             AnimeSearchResponse response = JsonSerializer.Deserialize<AnimeSearchResponse>(result);
             return response;
+        }
+
+        public async Task<bool> AddAnime(int animeId)
+        {
+            string query = $"{Constants.MAL_ROOT}/anime/{animeId}/my_list_status";
+            StringContent body = new StringContent("{}", Encoding.UTF8, "application/json");
+            var result = await client.PutAsync(query, body);
+            result.EnsureSuccessStatusCode();
+            return true;
         }
 
     }
