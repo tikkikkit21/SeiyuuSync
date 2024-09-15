@@ -65,7 +65,6 @@
             Title.TabIndex = 1;
             Title.Text = "SeiyuuSync";
             Title.TextAlign = ContentAlignment.MiddleCenter;
-            Title.Click += Title_Click;
             // 
             // tableLayoutPanel1
             // 
