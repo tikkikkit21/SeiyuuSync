@@ -166,7 +166,7 @@ namespace SeiyuuSync
                 {
                     BorderStyle = BorderStyle.FixedSingle,
                     Width = voiceActorFlow.Width - 50,
-                    Height = 200,
+                    Height = 100,
                     Margin = new Padding(10)
                 };
 
@@ -204,39 +204,56 @@ namespace SeiyuuSync
                     Dock = DockStyle.Fill,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
+                //Label thisCharacterLabel = new Label
+                //{
+                //    Text = actor.Value.,
+                //    Dock = DockStyle.Fill,
+                //    TextAlign = ContentAlignment.MiddleCenter
+                //};
+                //tableLayout.Controls.Add(nameLabel, 1, 0);
                 tableLayout.Controls.Add(nameLabel, 1, 0);
 
                 // Create and add inner FlowLayoutPanel to bottom cells
                 FlowLayoutPanel movieFlowLayout = new FlowLayoutPanel
                 {
                     Dock = DockStyle.Fill,
-                    FlowDirection = FlowDirection.LeftToRight,
-                    WrapContents = true
+                    FlowDirection = FlowDirection.TopDown,
+                    WrapContents = false
                 };
 
                 foreach (var character in actor.Value)
                 {
+                    //FlowLayoutPanel characterFlow = new FlowLayoutPanel
+                    //{
+                    //    Dock = DockStyle.Fill,
+                    //    FlowDirection = FlowDirection.LeftToRight,
+                    //    WrapContents = true
+                    //};
                     Label movieLabel = new Label
                     {
                         Text = character.AnimeName,
                         Margin = new Padding(5),
                         AutoSize = true
                     };
+                    Label characterLabel = new Label
+                    {
+                        Text = character.CharacterName,
+                        ForeColor = Color.Gray,
+                        Font = new Font("Segoe UI", 6f),
+                        Margin = new Padding(5, 5, 5, 1),
+                        AutoSize = true
+                    };
+                    movieFlowLayout.Controls.Add(characterLabel);
                     movieFlowLayout.Controls.Add(movieLabel);
                 }
+
+                int initialMovieFlowLayoutHeight = movieFlowLayout.Height;
 
                 // Add FlowLayoutPanel to bottom-left cell
                 tableLayout.Controls.Add(movieFlowLayout, 0, 1);
                 tableLayout.SetColumnSpan(movieFlowLayout, 2);
 
-                panel.Height = 200 + movieFlowLayout.Height;
-
-                // Add empty panel to bottom-right cell (if needed, can be omitted)
-                Panel emptyPanel = new Panel
-                {
-                    Dock = DockStyle.Fill
-                };
-                tableLayout.Controls.Add(emptyPanel, 1, 1);
+                panel.Height = 100 + initialMovieFlowLayoutHeight;
 
                 // Add TableLayoutPanel to the main Panel
                 panel.Controls.Add(tableLayout);
