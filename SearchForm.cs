@@ -61,13 +61,15 @@ namespace SeiyuuSync
 
                     if (await dbController.FindVoiceActor(vaName) == null)
                     {
-                        VoiceActor actor = new VoiceActor
-                        {
-                            Name = vaName,
-                            Characters = characters
-                        };
-                        await dbController.AddVoiceActor(actor);
+                        //VoiceActor actor = new VoiceActor
+                        //{
+                        //    Name = vaName,
+                        //    ImageUrl = 
+                        //    Characters = characters
+                        //};
+                        await dbController.AddVoiceActor(voiceActor);
                     }
+
                 }
             }
             catch (Exception ex)

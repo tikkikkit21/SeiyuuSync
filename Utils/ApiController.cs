@@ -214,26 +214,6 @@ namespace SeiyuuSync.Utils
                                 }
                             );
                         }
-                        //foreach (JsonElement voiceActor in voiceActors.EnumerateArray())
-                        //{
-                        //    string language = voiceActor.GetProperty("language").GetString();
-
-                        //    // Filter for Japanese voice actors
-                        //    if (language.ToUpper() == "JAPANESE")
-                        //    {
-                        //        string voiceActorName = voiceActor.GetProperty("name").GetProperty("full").GetString();
-                        //        string imageUrl = voiceActor.GetProperty("image").GetProperty("medium").GetString();
-                        //        if (vaList.ContainsKey(voiceActorName))
-                        //        {
-                        //            vaList[voiceActorName].Add(characterName);
-                        //        }
-                        //        else
-                        //        {
-                        //            vaList.Add(voiceActorName, new List<string> { characterName });
-                        //        }
-                        //        break;
-                        //    }
-                        //}
                     }
                 }
             }
