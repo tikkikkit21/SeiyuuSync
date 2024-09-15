@@ -196,9 +196,10 @@ namespace SeiyuuSync
                 }
 
                 // Create and add Label to top-right cell
+                string charName = actor.Characters.Where(c => c.AnimeName == selectedAnime).FirstOrDefault()?.CharacterName;
                 Label nameLabel = new Label
                 {
-                    Text = actor.Name,
+                    Text = $"{actor.Name} ({charName})",
                     Dock = DockStyle.Fill,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
