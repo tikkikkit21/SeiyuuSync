@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchForm));
             tbxSearch = new TextBox();
             dgvAnimeList = new DataGridView();
             colAnimeId = new DataGridViewTextBoxColumn();
@@ -220,9 +221,10 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(560, 718);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(2);
             Name = "SearchForm";
-            Text = "SearchForm";
+            Text = "Search For Anime";
             ((System.ComponentModel.ISupportInitialize)dgvAnimeList).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
