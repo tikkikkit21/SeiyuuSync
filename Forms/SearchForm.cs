@@ -118,12 +118,11 @@ namespace SeiyuuSync
             List<Anime> animes = await apiController.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
-            dgvAnimeList.ClearSelection();
             foreach (Anime anime in animes)
             {
                 dgvAnimeList.Rows.Add(anime.Id, anime.Title);
             }
-
+            dgvAnimeList.ClearSelection();
         }
 
         private async void CompareButton_Click(object sender, EventArgs e)
@@ -196,9 +195,10 @@ namespace SeiyuuSync
                 }
 
                 // Create and add Label to top-right cell
+                string charName = actor.Characters.Where(c => c.AnimeName == selectedAnime).FirstOrDefault()?.CharacterName;
                 Label nameLabel = new Label
                 {
-                    Text = actor.Name,
+                    Text = $"{actor.Name} ({charName})",
                     Dock = DockStyle.Fill,
                     TextAlign = ContentAlignment.MiddleCenter
                 };
