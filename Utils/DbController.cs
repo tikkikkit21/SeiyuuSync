@@ -63,10 +63,16 @@ namespace SeiyuuSync.Utils
             VoiceActor voiceActor = collection
                 .Find(va => va.Name == voiceActorToUpdate.Name)
                 .FirstOrDefault();
+            charactersToAdd = charactersToAdd.Where(c => !voiceActor.Characters.Any(vc => CompareCharacter(c, vc))).ToList();
             voiceActor.Characters.AddRange(charactersToAdd);
             var filter = Builders<VoiceActor>.Filter.Eq("name", voiceActorToUpdate.Name);
             await collection.ReplaceOneAsync(filter, voiceActor);
             return voiceActor;
+        }
+
+        private bool CompareCharacter(Character c1, Character c2)
+        {
+            return c1.CharacterName == c2.CharacterName && c1.AnimeName == c2.AnimeName;
         }
     }
 }

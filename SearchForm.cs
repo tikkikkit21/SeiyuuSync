@@ -43,7 +43,7 @@ namespace SeiyuuSync
         /// </summary>
         /// <param name="animeName">Name of anime</param>
         /// <param name="vaList">Dictionary of VA info</param>
-        private async void AddVoiceActors(string animeName, List<VoiceActor> vaList)
+        private async Task AddVoiceActors(string animeName, List<VoiceActor> vaList)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace SeiyuuSync
 
             // add to database
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
-            AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
+            await AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
             MessageBox.Show($"{selectedAnime} added to MAL and database", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
