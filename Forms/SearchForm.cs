@@ -118,12 +118,11 @@ namespace SeiyuuSync
             List<Anime> animes = await apiController.FindAnime(animeName);
 
             dgvAnimeList.Rows.Clear();
-            dgvAnimeList.ClearSelection();
             foreach (Anime anime in animes)
             {
                 dgvAnimeList.Rows.Add(anime.Id, anime.Title);
             }
-
+            dgvAnimeList.ClearSelection();
         }
 
         private async void CompareButton_Click(object sender, EventArgs e)
