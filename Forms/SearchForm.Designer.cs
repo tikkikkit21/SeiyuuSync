@@ -72,7 +72,7 @@
             dgvAnimeList.RowHeadersVisible = false;
             dgvAnimeList.RowHeadersWidth = 62;
             dgvAnimeList.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvAnimeList.Size = new Size(276, 378);
+            dgvAnimeList.Size = new Size(276, 639);
             dgvAnimeList.TabIndex = 4;
             // 
             // colAnimeId
@@ -139,7 +139,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 12F));
-            tableLayoutPanel1.Size = new Size(560, 457);
+            tableLayoutPanel1.Size = new Size(560, 718);
             tableLayoutPanel1.TabIndex = 6;
             // 
             // tableLayoutPanel2
@@ -151,7 +151,7 @@
             tableLayoutPanel2.Controls.Add(CompareButton, 1, 0);
             tableLayoutPanel2.Controls.Add(AddButton, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(114, 429);
+            tableLayoutPanel2.Location = new Point(114, 690);
             tableLayoutPanel2.Margin = new Padding(2);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
@@ -210,7 +210,7 @@
             voiceActorFlow.Location = new Point(310, 47);
             voiceActorFlow.Margin = new Padding(2);
             voiceActorFlow.Name = "voiceActorFlow";
-            voiceActorFlow.Size = new Size(220, 378);
+            voiceActorFlow.Size = new Size(220, 639);
             voiceActorFlow.TabIndex = 8;
             voiceActorFlow.WrapContents = false;
             // 
@@ -218,7 +218,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(560, 457);
+            ClientSize = new Size(560, 718);
             Controls.Add(tableLayoutPanel1);
             Margin = new Padding(2);
             Name = "SearchForm";
