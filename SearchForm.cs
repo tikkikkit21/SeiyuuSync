@@ -166,7 +166,9 @@ namespace SeiyuuSync
                 {
                     BorderStyle = BorderStyle.FixedSingle,
                     Width = voiceActorFlow.Width - 50,
+
                     Height = 100,
+
                     Margin = new Padding(10)
                 };
 
