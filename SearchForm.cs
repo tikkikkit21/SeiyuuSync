@@ -219,6 +219,7 @@ namespace SeiyuuSync
                     WrapContents = false
                 };
 
+                string characterString = "";
                 foreach (var character in actor.Characters)
                 {
                     //FlowLayoutPanel characterFlow = new FlowLayoutPanel
@@ -227,23 +228,33 @@ namespace SeiyuuSync
                     //    FlowDirection = FlowDirection.LeftToRight,
                     //    WrapContents = true
                     //};
-                    Label movieLabel = new Label
-                    {
-                        Text = character.AnimeName,
-                        Margin = new Padding(5),
-                        AutoSize = true
-                    };
-                    Label characterLabel = new Label
-                    {
-                        Text = character.CharacterName,
-                        ForeColor = Color.Gray,
-                        Font = new Font("Segoe UI", 6f),
-                        Margin = new Padding(5, 5, 5, 1),
-                        AutoSize = true
-                    };
-                    movieFlowLayout.Controls.Add(characterLabel);
-                    movieFlowLayout.Controls.Add(movieLabel);
+                    //Label movieLabel = new Label
+                    //{
+                    //    Text = character.AnimeName,
+                    //    Margin = new Padding(5),
+                    //    AutoSize = true
+                    //};
+                    //Label characterLabel = new Label
+                    //{
+                    //    Text = character.CharacterName,
+                    //    ForeColor = Color.Gray,
+                    //    Font = new Font("Segoe UI", 6f),
+                    //    Margin = new Padding(5, 5, 5, 1),
+                    //    AutoSize = true
+                    //};
+                    //movieFlowLayout.Controls.Add(characterLabel);
+                    //movieFlowLayout.Controls.Add(movieLabel);
+                    characterString += $" - {character.AnimeName} - {character.CharacterName}\n";
                 }
+                Label characterLabel = new Label
+                {
+                    Text = characterString,
+                    ForeColor = Color.Black,
+                    //Font = new Font("Segoe UI", 6f),
+                    Margin = new Padding(5, 5, 5, 1),
+                    AutoSize = true
+                };
+                movieFlowLayout.Controls.Add(characterLabel);
 
                 int initialMovieFlowLayoutHeight = movieFlowLayout.Height;
 
