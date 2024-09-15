@@ -102,6 +102,7 @@ namespace SeiyuuSync
             // add to database
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
             AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
+            MessageBox.Show($"{selectedAnime} added to MAL and database", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
