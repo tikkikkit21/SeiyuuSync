@@ -16,7 +16,6 @@ namespace SeiyuuSync
         private static ApiController apiController;
         private static DbController dbController;
 
-
         public SearchForm()
         {
             InitializeComponent();
@@ -61,13 +60,11 @@ namespace SeiyuuSync
 
                     if (await dbController.FindVoiceActor(vaName) == null)
                     {
-                        //VoiceActor actor = new VoiceActor
-                        //{
-                        //    Name = vaName,
-                        //    ImageUrl = 
-                        //    Characters = characters
-                        //};
                         await dbController.AddVoiceActor(voiceActor);
+                    }
+                    else
+                    {
+                        await dbController.AddCharacters(voiceActor, characters);
                     }
 
                 }

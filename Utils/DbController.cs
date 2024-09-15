@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using SeiyuuSync.JsonClasses;
+using System.Xml.Linq;
 
 namespace SeiyuuSync.Utils
 {
@@ -40,7 +41,8 @@ namespace SeiyuuSync.Utils
         /// </summary>
         /// <param name="va">VoiceActor to add</param>
         /// <returns>Boolean indicating success</returns>
-        public async Task<bool> AddVoiceActor(VoiceActor va) {
+        public async Task<bool> AddVoiceActor(VoiceActor va)
+        {
             try
             {
                 IMongoCollection<VoiceActor> collection = database.GetCollection<VoiceActor>("voice_actors");
@@ -52,6 +54,19 @@ namespace SeiyuuSync.Utils
                 Console.WriteLine(ex);
                 return false;
             }
+        }
+
+
+        public async Task<VoiceActor> AddCharacters(VoiceActor voiceActorToUpdate, List<Character> charactersToAdd)
+        {
+            IMongoCollection<VoiceActor> collection = database.GetCollection<VoiceActor>("voice_actors");
+            VoiceActor voiceActor = collection
+                .Find(va => va.Name == voiceActorToUpdate.Name)
+                .FirstOrDefault();
+            voiceActor.Characters.AddRange(charactersToAdd);
+            var filter = Builders<VoiceActor>.Filter.Eq("name", voiceActorToUpdate.Name);
+            await collection.ReplaceOneAsync(filter, voiceActor);
+            return voiceActor;
         }
     }
 }
