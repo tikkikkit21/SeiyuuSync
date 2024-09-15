@@ -29,25 +29,28 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HomeForm));
-            SearchButton = new Button();
+            btnSearch = new Button();
             Title = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            btnList = new Button();
             tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
-            // SearchButton
+            // btnSearch
             // 
-            SearchButton.Anchor = AnchorStyles.Top;
-            SearchButton.Font = new Font("Segoe UI", 12F);
-            SearchButton.Location = new Point(513, 568);
-            SearchButton.Margin = new Padding(2);
-            SearchButton.Name = "SearchButton";
-            SearchButton.Size = new Size(130, 32);
-            SearchButton.TabIndex = 0;
-            SearchButton.Text = "Start Search";
-            SearchButton.UseVisualStyleBackColor = true;
-            SearchButton.Click += SearchButton_Click;
+            btnSearch.Anchor = AnchorStyles.Top;
+            btnSearch.Font = new Font("Segoe UI", 12F);
+            btnSearch.Location = new Point(172, 2);
+            btnSearch.Margin = new Padding(2);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(130, 32);
+            btnSearch.TabIndex = 0;
+            btnSearch.Text = "Start Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += SearchButton_Click;
             // 
             // Title
             // 
@@ -71,9 +74,9 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
-            tableLayoutPanel1.Controls.Add(SearchButton, 1, 2);
             tableLayoutPanel1.Controls.Add(Title, 1, 0);
             tableLayoutPanel1.Controls.Add(label1, 1, 1);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -94,6 +97,35 @@
             label1.TabIndex = 2;
             label1.Text = resources.GetString("label1.Text");
             // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Controls.Add(btnList, 1, 0);
+            tableLayoutPanel2.Controls.Add(btnSearch, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(103, 569);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel2.Size = new Size(950, 94);
+            tableLayoutPanel2.TabIndex = 3;
+            // 
+            // btnList
+            // 
+            btnList.Anchor = AnchorStyles.Top;
+            btnList.Font = new Font("Segoe UI", 12F);
+            btnList.Location = new Point(647, 2);
+            btnList.Margin = new Padding(2);
+            btnList.Name = "btnList";
+            btnList.Size = new Size(130, 32);
+            btnList.TabIndex = 1;
+            btnList.Text = "List My Animes";
+            btnList.UseVisualStyleBackColor = true;
+            btnList.Click += btnList_Click;
+            // 
             // HomeForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -109,14 +141,17 @@
             Text = "SeiyuuSync";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Button SearchButton;
+        private Button btnSearch;
         private Label Title;
         private TableLayoutPanel tableLayoutPanel1;
         private Label label1;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Button btnList;
     }
 }
