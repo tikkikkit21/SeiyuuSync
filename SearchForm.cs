@@ -1,11 +1,5 @@
 ﻿using SeiyuuSync.JsonClasses;
 using SeiyuuSync.Utils;
-using System.Text.Json;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Xml;
-using Amazon.Runtime.Internal.Transform;
-using System.Xml.Linq;
 
 namespace SeiyuuSync
 {
