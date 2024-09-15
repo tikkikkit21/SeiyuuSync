@@ -115,8 +115,9 @@ namespace SeiyuuSync.Utils
         /// </summary>
         /// <param name="animeName">Name of anime</param>
         /// <returns>Dictionary of VA names associated with a list of characters</returns>
-        public async Task<Dictionary<string, List<string>>> FindVoiceActors(string animeName)
+        public async Task<List<VoiceActor>> FindVoiceActors(string animeName)
         {
+            List<VoiceActor> vaList = new List<VoiceActor>();
             try
             {
                 string query = @"
@@ -139,6 +140,9 @@ namespace SeiyuuSync.Utils
                             full
                           }
                           language
+                          image {
+                            medium
+                          }
                         }
                       }
                     }
@@ -161,7 +165,6 @@ namespace SeiyuuSync.Utils
 
                 // Read the response body as a string
                 string jsonResponse = await response.Content.ReadAsStringAsync();
-                Dictionary<string, List<string>> vaDict = new Dictionary<string, List<string>>();
                 using (JsonDocument document = JsonDocument.Parse(jsonResponse))
                 {
                     JsonElement root = document.RootElement;
@@ -178,36 +181,48 @@ namespace SeiyuuSync.Utils
                         string characterName = characterNode.GetProperty("name").GetProperty("full").GetString();
 
                         // Get the voice actors for this character
-                        JsonElement voiceActors = characterEdge.GetProperty("voiceActors");
-                        foreach (JsonElement voiceActor in voiceActors.EnumerateArray())
-                        {
-                            string language = voiceActor.GetProperty("language").GetString();
+                        var voiceActors = characterEdge.GetProperty("voiceActors").EnumerateArray();
+                        var japaneseVa = voiceActors.Where(va => va.GetProperty("language").GetString().ToUpper() == "JAPANESE").FirstOrDefault();
+                        string voiceActorName = japaneseVa.GetProperty("name").GetProperty("full").GetString();
+                        string imageUrl = japaneseVa.GetProperty("image").GetProperty("medium").GetString();
 
-                            // Filter for Japanese voice actors
-                            if (language.ToUpper() == "JAPANESE")
+                        VoiceActor storedVa = vaList.Where(va => va.Name == voiceActorName).FirstOrDefault();
+                        if (storedVa == null)
+                        {
+                            storedVa = new VoiceActor
                             {
-                                string voiceActorName = voiceActor.GetProperty("name").GetProperty("full").GetString();
-                                if (vaDict.ContainsKey(voiceActorName))
+                                Name = voiceActorName,
+                                ImageUrl = imageUrl,
+                                Characters = new List<Character>
                                 {
-                                    vaDict[voiceActorName].Add(characterName);
+                                    new Character
+                                    {
+                                        AnimeName = animeName,
+                                        CharacterName = characterName
+                                    }
                                 }
-                                else
+                            };
+                            vaList.Add(storedVa);
+                        }
+                        else
+                        {
+                            storedVa.Characters.Add(
+                                new Character
                                 {
-                                    vaDict.Add(voiceActorName, new List<string> { characterName });
+                                    AnimeName = animeName,
+                                    CharacterName = characterName
                                 }
-                                break;
-                            }
+                            );
                         }
                     }
                 }
-
-                return vaDict;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return null;
             }
+
+            return vaList;
         }
     }
 }
