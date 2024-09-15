@@ -50,7 +50,7 @@
             btnSearch.TabIndex = 0;
             btnSearch.Text = "Start Search";
             btnSearch.UseVisualStyleBackColor = true;
-            btnSearch.Click += SearchButton_Click;
+            btnSearch.Click += btnSearch_Click;
             // 
             // Title
             // 
