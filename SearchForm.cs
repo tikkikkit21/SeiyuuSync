@@ -1,11 +1,5 @@
 ﻿using SeiyuuSync.JsonClasses;
 using SeiyuuSync.Utils;
-using System.Text.Json;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Xml;
-using Amazon.Runtime.Internal.Transform;
-using System.Xml.Linq;
 
 namespace SeiyuuSync
 {
@@ -15,7 +9,6 @@ namespace SeiyuuSync
         bool split = false;
         private static ApiController apiController;
         private static DbController dbController;
-
 
         public SearchForm()
         {
@@ -50,7 +43,7 @@ namespace SeiyuuSync
         /// </summary>
         /// <param name="animeName">Name of anime</param>
         /// <param name="vaList">Dictionary of VA info</param>
-        private async void AddVoiceActors(string animeName, List<VoiceActor> vaList)
+        private async Task AddVoiceActors(string animeName, List<VoiceActor> vaList)
         {
             try
             {
@@ -61,13 +54,11 @@ namespace SeiyuuSync
 
                     if (await dbController.FindVoiceActor(vaName) == null)
                     {
-                        //VoiceActor actor = new VoiceActor
-                        //{
-                        //    Name = vaName,
-                        //    ImageUrl = 
-                        //    Characters = characters
-                        //};
                         await dbController.AddVoiceActor(voiceActor);
+                    }
+                    else
+                    {
+                        await dbController.AddCharacters(voiceActor, characters);
                     }
 
                 }
@@ -104,7 +95,8 @@ namespace SeiyuuSync
 
             // add to database
             string selectedAnime = (string)dgvAnimeList.SelectedCells[colAnimeName.Index].Value;
-            AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
+            await AddVoiceActors(selectedAnime, await apiController.FindVoiceActors(selectedAnime));
+            MessageBox.Show($"{selectedAnime} added to MAL and database", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private async void btnSearch_Click(object sender, EventArgs e)
@@ -227,6 +219,7 @@ namespace SeiyuuSync
                     WrapContents = false
                 };
 
+                string characterString = "";
                 foreach (var character in actor.Characters)
                 {
                     //FlowLayoutPanel characterFlow = new FlowLayoutPanel
@@ -235,23 +228,33 @@ namespace SeiyuuSync
                     //    FlowDirection = FlowDirection.LeftToRight,
                     //    WrapContents = true
                     //};
-                    Label movieLabel = new Label
-                    {
-                        Text = character.AnimeName,
-                        Margin = new Padding(5),
-                        AutoSize = true
-                    };
-                    Label characterLabel = new Label
-                    {
-                        Text = character.CharacterName,
-                        ForeColor = Color.Gray,
-                        Font = new Font("Segoe UI", 6f),
-                        Margin = new Padding(5, 5, 5, 1),
-                        AutoSize = true
-                    };
-                    movieFlowLayout.Controls.Add(characterLabel);
-                    movieFlowLayout.Controls.Add(movieLabel);
+                    //Label movieLabel = new Label
+                    //{
+                    //    Text = character.AnimeName,
+                    //    Margin = new Padding(5),
+                    //    AutoSize = true
+                    //};
+                    //Label characterLabel = new Label
+                    //{
+                    //    Text = character.CharacterName,
+                    //    ForeColor = Color.Gray,
+                    //    Font = new Font("Segoe UI", 6f),
+                    //    Margin = new Padding(5, 5, 5, 1),
+                    //    AutoSize = true
+                    //};
+                    //movieFlowLayout.Controls.Add(characterLabel);
+                    //movieFlowLayout.Controls.Add(movieLabel);
+                    characterString += $" - {character.AnimeName} - {character.CharacterName}\n";
                 }
+                Label characterLabel = new Label
+                {
+                    Text = characterString,
+                    ForeColor = Color.Black,
+                    //Font = new Font("Segoe UI", 6f),
+                    Margin = new Padding(5, 5, 5, 1),
+                    AutoSize = true
+                };
+                movieFlowLayout.Controls.Add(characterLabel);
 
                 int initialMovieFlowLayoutHeight = movieFlowLayout.Height;
 
